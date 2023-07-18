@@ -13,7 +13,7 @@
 
 
 
-![image](https://github.com/cwloo/gonet/blob/main/res/log.png)
+![image](https://github.com/cwloo/res_misc/tree/main/res/log.png)
 
 
-![image](https://github.com/cwloo/gonet/blob/main/res/server.png)
+![image](https://github.com/cwloo/res_misc/tree/main/res/server.png)
