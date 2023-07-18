@@ -5,7 +5,7 @@ import "sync"
 var (
 	pool = sync.Pool{
 		New: func() any {
-			return NewBucket()
+			return &Bucket{}
 		},
 	}
 )
@@ -55,4 +55,8 @@ func (s *Bucket) Pop() (v []any) {
 	}
 	s.l.Unlock()
 	return
+}
+
+func (s *Bucket) Put() {
+	pool.Put(s)
 }

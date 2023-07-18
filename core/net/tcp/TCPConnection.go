@@ -16,8 +16,8 @@ import (
 	"github.com/cwloo/gonet/core/net/keepalive"
 	"github.com/cwloo/gonet/core/net/transmit"
 	logs "github.com/cwloo/gonet/logs"
-	"github.com/cwloo/gonet/utils"
 	"github.com/cwloo/gonet/utils/safe"
+	"github.com/cwloo/gonet/utils/timestamp"
 
 	"github.com/gorilla/websocket"
 )
@@ -285,7 +285,7 @@ LOOP:
 			panic(errors.New("error"))
 		} else if s.onMessage != nil {
 			s.buckets.Update(s)
-			s.onMessage(s, msg, utils.TimeNow())
+			s.onMessage(s, msg, timestamp.Now())
 		} else {
 			panic(errors.New("error"))
 		}

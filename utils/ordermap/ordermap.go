@@ -1,29 +1,23 @@
-package utils
+package ordermap
 
 import (
 	"container/list"
 )
 
-// <summary>
-// Pair key-value
-// <summary>
 type Pair struct {
 	Key any
 	Val any
 }
 
-// <summary>
-// Orderedmap 排序map
-// <summary>
-type Orderedmap struct {
+type M struct {
 	list *list.List
 }
 
-func NewOrderedmap() *Orderedmap {
-	return &Orderedmap{list: list.New()}
+func New() *M {
+	return &M{list: list.New()}
 }
 
-func (s *Orderedmap) Insert(key any, value any, compare func(a, b any) bool) {
+func (s *M) Insert(key any, value any, compare func(a, b any) bool) {
 	pos := s.list.Front()
 	for ; pos != nil; pos = pos.Next() {
 		if !compare(key, pos.Value.(*Pair).Key) {
@@ -38,7 +32,7 @@ func (s *Orderedmap) Insert(key any, value any, compare func(a, b any) bool) {
 	}
 }
 
-func (s *Orderedmap) Top() (any, any) {
+func (s *M) Top() (any, any) {
 	if elem := s.list.Front(); elem != nil {
 		data := elem.Value.(*Pair)
 		return data.Key, data.Val
@@ -46,16 +40,16 @@ func (s *Orderedmap) Top() (any, any) {
 	return nil, nil
 }
 
-func (s *Orderedmap) Front() *list.Element {
+func (s *M) Front() *list.Element {
 	return s.list.Front()
 }
 
-func (s *Orderedmap) Pop() {
+func (s *M) Pop() {
 	if elem := s.list.Front(); elem != nil {
 		s.list.Remove(elem)
 	}
 }
 
-func (s *Orderedmap) Empty() bool {
+func (s *M) Empty() bool {
 	return s.list.Len() == 0
 }

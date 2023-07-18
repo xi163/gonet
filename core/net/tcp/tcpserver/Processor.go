@@ -16,8 +16,7 @@ import (
 	"github.com/cwloo/gonet/core/net/transmit/tcpchannel"
 	"github.com/cwloo/gonet/core/net/transmit/wschannel"
 	logs "github.com/cwloo/gonet/logs"
-	"github.com/cwloo/gonet/utils"
-
+	"github.com/cwloo/gonet/utils/timestamp"
 	"github.com/gorilla/websocket"
 )
 
@@ -253,7 +252,7 @@ func (s *Processor) OnClosed(peer conn.Session, reason conn.Reason) {
 	}
 }
 
-func (s *Processor) OnMessage(peer conn.Session, msg any, recvTime utils.Timestamp) {
+func (s *Processor) OnMessage(peer conn.Session, msg any, recvTime timestamp.T) {
 	// logs.Infof("")
 }
 

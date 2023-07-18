@@ -4,8 +4,9 @@ import (
 	//_ "container/heap"
 	"errors"
 
-	"github.com/cwloo/gonet/utils"
 	"github.com/cwloo/gonet/utils/gid"
+	"github.com/cwloo/gonet/utils/ordermap"
+	"github.com/cwloo/gonet/utils/timestamp"
 
 	"sync/atomic"
 )
@@ -52,7 +53,7 @@ type timerEvent struct {
 	// 执行间隔时间(s)
 	interval int32
 	// 上次开始执行时间
-	last utils.Timestamp
+	last timestamp.T
 	// 下次开始执行时间
 	//expr Timestamp
 	// 回调函数
@@ -65,10 +66,10 @@ type timerEvent struct {
 // scopedTimer 基于最小堆(最小生成树)实现的定时器
 // <summary>
 type scopedTimer struct {
-	x        uint32           // 用于自动生成timerID
-	tid      int              // 定时器所属goroutine
-	timers   utils.Orderedmap // 排序 map[timestamp] = timer
-	timerIDs map[uint32]bool  // 保存要删除的timerID集合
+	x        uint32          // 用于自动生成timerID
+	tid      int             // 定时器所属goroutine
+	timers   ordermap.M      // 排序 map[timestamp] = timer
+	timerIDs map[uint32]bool // 保存要删除的timerID集合
 }
 
 func NewScopedTimer(tid int) ScopedTimer {
@@ -77,7 +78,7 @@ func NewScopedTimer(tid int) ScopedTimer {
 	}
 	return &scopedTimer{
 		tid:      tid,
-		timers:   *utils.NewOrderedmap(),
+		timers:   *ordermap.New(),
 		timerIDs: map[uint32]bool{}}
 }
 
@@ -137,7 +138,7 @@ func (s *scopedTimer) CreateTimerWithCB(delay, interval int32, handler TimerCall
 
 // 比较大小
 func compare(a, b any) bool {
-	return a.(utils.Timestamp).Greater(b.(utils.Timestamp))
+	return a.(timestamp.T).Greater(b.(timestamp.T))
 }
 
 // 安全断言
@@ -152,11 +153,11 @@ func (s *scopedTimer) createTimer(timerID uint32, delay, interval int32, handler
 	// 线程安全
 	s.assertThis()
 	// 创建 timer
-	timer := &timerEvent{timerID: timerID, interval: interval, last: utils.TimeNowMilliSec(), handler: handler, args: args}
-	// timer := &timerEvent{timerID: timerID, interval: interval, last: utils.TimeNowMilliSec(), handler: handler}
+	timer := &timerEvent{timerID: timerID, interval: interval, last: timestamp.NowMilliSec(), handler: handler, args: args}
+	// timer := &timerEvent{timerID: timerID, interval: interval, last: timestamp.NowMilliSec(), handler: handler}
 	// timer.args = append(timer.args, args...)
 	// 放在 map[timestamp] = timer 中，并对 timestamp 进行关键字排序
-	s.timers.Insert(utils.TimeAdd(timer.last, delay), timer, compare)
+	s.timers.Insert(timestamp.Add(timer.last, delay), timer, compare)
 	// 打印调试
 	// s.Keys()
 	// 返回定时器ID
@@ -167,7 +168,7 @@ func (s *scopedTimer) createTimer(timerID uint32, delay, interval int32, handler
 func (s *scopedTimer) Keys() {
 	i := 0
 	for elem := s.timers.Front(); elem != nil; elem = elem.Next() {
-		// key := elem.Value.(*utils.Pair).Key.(utils.Timestamp)
+		// key := elem.Value.(*utils.Pair).Key.(timestamp.T)
 		// val := elem.Value.(*utils.Pair).Val.(*timerEvent)
 		// logs.Debugf("--- *** ScopedTimer[%d:%v] = %d", i, key.SinceUnixEpoch(), val.timerID)
 		i++
@@ -184,10 +185,10 @@ func (s *scopedTimer) Poll(tid int, update TimerCallback) bool {
 	// 进入循环
 	for {
 		//log.Printf("--- *** ScopedTimer:: Poll %s...", CreateToken())
-		now := utils.TimeNowMilliSec()
+		now := timestamp.NowMilliSec()
 		// 取出栈顶Timestamp
 		k, v := s.timers.Top()
-		ts := k.(utils.Timestamp)
+		ts := k.(timestamp.T)
 		t := v.(*timerEvent)
 		if ts.Greater(now) {
 			return false
@@ -199,12 +200,12 @@ func (s *scopedTimer) Poll(tid int, update TimerCallback) bool {
 			// 删除
 		} else if t.handler != nil { // 先执行handler回调如果有的话
 			// 执行handler回调 handler(timerID, elapsed, args...)
-			if t.handler(t.timerID, utils.TimeDiff(now, t.last), t.args...) {
+			if t.handler(t.timerID, timestamp.Diff(now, t.last), t.args...) {
 				// 下次开始执行时间，从当前handler执行之后开始算
 				if t.interval > 0 {
 					t.last = now
 					// 再次添加到有序表
-					s.timers.Insert(utils.TimeNowMilliSec().Add(t.interval), t, compare)
+					s.timers.Insert(timestamp.NowMilliSec().Add(t.interval), t, compare)
 				} else {
 					// 不再需要则销毁
 				}
@@ -213,12 +214,12 @@ func (s *scopedTimer) Poll(tid int, update TimerCallback) bool {
 			} // 否则执行update回调如果有的话
 		} else if update != nil {
 			// 执行update回调 update(timerID, elapsed, args...)
-			if update(t.timerID, utils.TimeDiff(now, t.last), t.args...) {
+			if update(t.timerID, timestamp.Diff(now, t.last), t.args...) {
 				// 下次开始执行时间，从当前update执行之后开始算
 				if t.interval > 0 {
 					t.last = now
 					// 再次添加到有序表
-					s.timers.Insert(utils.TimeNowMilliSec().Add(t.interval), t, compare)
+					s.timers.Insert(timestamp.NowMilliSec().Add(t.interval), t, compare)
 				} else {
 					// 不再需要则销毁
 				}

@@ -1,13 +1,13 @@
-package utils
+package ini
 
 import (
 	"strconv"
 
-	"gopkg.in/ini.v1"
+	libini "gopkg.in/ini.v1"
 )
 
 type Ini struct {
-	reader *ini.File
+	reader *libini.File
 }
 
 // type IniParserError struct {
@@ -17,7 +17,7 @@ type Ini struct {
 //func (s *IniParserError) Error() string { return s.err }
 
 func (s *Ini) Load(filename string) error {
-	conf, err := ini.Load(filename)
+	conf, err := libini.Load(filename)
 	if err != nil {
 		s.reader = nil
 		return err

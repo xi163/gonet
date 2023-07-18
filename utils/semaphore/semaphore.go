@@ -1,27 +1,25 @@
-package utils
+package semaphore
 
 import "sync"
 
-// <summary>
-// Semaphore 信号量互斥访问控制
-// <summary>
-type Semaphore struct {
-	w        *sync.Mutex
-	l        *sync.Mutex
-	c        *sync.Cond
-	avail    int64
-	initsize int64
+/// <summary>
+/// 互斥访问控制
+/// <summary>
+type Sem struct {
+	w     *sync.Mutex
+	l     *sync.Mutex
+	c     *sync.Cond
+	avail int64
+	n     int64 //n个并发访问
 }
 
-// 初始化initsize个并发访问资源
-func NewSemaphore(initsize int64) *Semaphore {
-	s := &Semaphore{initsize: initsize, avail: initsize, l: &sync.Mutex{}, w: &sync.Mutex{}}
+func New(n int64) *Sem {
+	s := &Sem{n: n, avail: n, l: &sync.Mutex{}, w: &sync.Mutex{}}
 	s.c = sync.NewCond(s.l)
 	return s
 }
 
-// 进入访问资源
-func (s *Semaphore) Enter() {
+func (s *Sem) Enter() {
 wait:
 	s.wait()
 	s.w.Lock()
@@ -34,10 +32,9 @@ wait:
 	}
 }
 
-// 离开释放资源
-func (s *Semaphore) Leave() {
+func (s *Sem) Leave() {
 	s.w.Lock()
-	if s.avail < s.initsize {
+	if s.avail < s.n {
 		s.avail++
 		if s.avail == 1 {
 			s.c.Signal()
@@ -46,8 +43,7 @@ func (s *Semaphore) Leave() {
 	s.w.Unlock()
 }
 
-// 等待资源
-func (s *Semaphore) wait() {
+func (s *Sem) wait() {
 	s.l.Lock()
 	for s.avail == 0 {
 		s.c.Wait()
@@ -55,21 +51,18 @@ func (s *Semaphore) wait() {
 	s.l.Unlock()
 }
 
-// 信号量互斥访问控制
-type FreeSemaphore struct {
-	l        *sync.Mutex
-	avail    int64
-	initsize int64
+type FreeSem struct {
+	l     *sync.Mutex
+	avail int64
+	n     int64
 }
 
-// 初始化initsize个并发访问资源
-func NewFreeSemaphore(initsize int64) *FreeSemaphore {
-	s := &FreeSemaphore{initsize: initsize, avail: initsize, l: &sync.Mutex{}}
+func NewFreeSem(n int64) *FreeSem {
+	s := &FreeSem{n: n, avail: n, l: &sync.Mutex{}}
 	return s
 }
 
-// 进入访问资源
-func (s *FreeSemaphore) Enter() (bv bool) {
+func (s *FreeSem) Enter() (bv bool) {
 	s.l.Lock()
 	if s.avail > 0 {
 		s.avail--
@@ -79,41 +72,38 @@ func (s *FreeSemaphore) Enter() (bv bool) {
 	return
 }
 
-// 离开释放资源
-func (s *FreeSemaphore) Leave() {
+func (s *FreeSem) Leave() {
 	s.l.Lock()
-	if s.avail < s.initsize {
+	if s.avail < s.n {
 		s.avail++
 	}
 	s.l.Unlock()
 }
 
-var gSem = NewSemaphore(10)
+var sem = New(10)
 var ix = 10
 
 func TestSemaphore() {
-
 	for i := 0; i < 100; i++ {
 		go func() {
 			for {
-				gSem.Enter()
+				sem.Enter()
 				ix--
 				println("1======= ", ix)
 				ix++
 				println("2======= ", ix)
-				gSem.Leave()
+				sem.Leave()
 			}
 		}()
 	}
 }
 
-//
 func OnInputTestSemaphore(str string) int {
 	switch str {
 	case "w":
 		{
 			for i := 0; i < 30; i++ {
-				gSem.Leave()
+				sem.Leave()
 			}
 			return 0
 		}

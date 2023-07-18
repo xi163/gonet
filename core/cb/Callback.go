@@ -6,7 +6,7 @@ import (
 
 	"github.com/cwloo/gonet/core/net/conn"
 	"github.com/cwloo/gonet/core/net/transmit"
-	"github.com/cwloo/gonet/utils"
+	"github.com/cwloo/gonet/utils/timestamp"
 )
 
 type OnHandshake func(w http.ResponseWriter, r *http.Request) bool
@@ -21,7 +21,7 @@ type OnConnected func(peer conn.Session, v ...any)
 
 type OnClosed func(peer conn.Session, reason conn.Reason)
 
-type OnMessage func(peer conn.Session, msg any, recvTime utils.Timestamp)
+type OnMessage func(peer conn.Session, msg any, recvTime timestamp.T)
 
 type OnWriteComplete func(peer conn.Session)
 
