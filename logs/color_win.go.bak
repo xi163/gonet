@@ -1,0 +1,24 @@
+package logs
+
+import (
+	"github.com/cwloo/gonet/logs/color_win"
+)
+
+var (
+	color = [][2]int{
+		{color_win.FOREGROUND_Red, color_win.FOREGROUND_LightRed},       //LVL_FATAL
+		{color_win.FOREGROUND_Red, color_win.FOREGROUND_Purple},         //LVL_ERROR
+		{color_win.FOREGROUND_Cyan, color_win.FOREGROUND_HighCyan},      //LVL_WARN
+		{color_win.FOREGROUND_Pink, color_win.FOREGROUND_White},         //LVL_INFO
+		{color_win.FOREGROUND_Yellow, color_win.FOREGROUND_LightYellow}, //LVL_TRACE
+		{color_win.FOREGROUND_HighGreen, color_win.FOREGROUND_Gray},     //LVL_DEBUG
+	}
+)
+
+func PrintFormat(color int, format string, v ...any) {
+	color_win.PrintFormat(color, format, v...)
+}
+
+func Print(color int, msg string) {
+	color_win.Print(color, msg)
+}

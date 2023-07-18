@@ -1,0 +1,77 @@
+package mysql
+
+import (
+	"log"
+
+	"github.com/cwloo/gonet/core/base/sys"
+)
+
+type Pool struct {
+	conf *Config
+	pool *sys.FreeValues
+}
+
+func NewPool() *Pool {
+	s := &Pool{pool: sys.NewFreeValues()}
+	s.pool.SetNew(s.newMysql)
+	return s
+}
+
+var pool *Pool
+
+func Instance() *Pool {
+	// if atomic.CompareAndSwapInt32(&x, 0, 1) == true {
+	// 	pool = newPool()
+	// }
+	if pool == nil {
+		pool = NewPool()
+	}
+	return pool
+}
+
+func (s *Pool) InitConfig(conf *Config) {
+	s.conf = conf
+}
+
+func (s *Pool) ping(i int32, value interface{}) {
+	mysql := value.(*Mysql)
+	if err := mysql.Ping(); err != nil {
+		errno, errmsg := mysql.GetError(err)
+		log.Printf("<%d>:%s", errno, errmsg)
+		mysql.Connect()
+	} else {
+		log.Printf("ping[%d][%d] %s OK", util.GoroutineID(), i, mysql.Dsn())
+	}
+}
+
+func (s *Pool) Ping() {
+	s.pool.Visit(s.ping)
+}
+
+func (s *Pool) Alloc() *Mysql {
+	return s.allocMysql()
+}
+
+func (s *Pool) Free(mysql *Mysql) {
+	s.freeMysql(mysql)
+}
+
+func (s *Pool) newMysql() interface{} {
+	return newMysql(s.conf)
+}
+
+func (s *Pool) allocMysql() *Mysql {
+	return s.pool.Alloc().(*Mysql)
+}
+
+func (s *Pool) freeMysql(mysql *Mysql) {
+	s.pool.Free(mysql)
+}
+
+func (s *Pool) reset(value interface{}) {
+	value.(*Mysql).Disconnect()
+}
+
+func (s *Pool) Reset() {
+	s.pool.ResetValues(s.reset)
+}

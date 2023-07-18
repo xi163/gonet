@@ -1,0 +1,17 @@
+package mysql
+
+type Access struct {
+	mysql *Mysql
+}
+
+func NewAccess() *Access {
+	return &Access{mysql: Instance().Alloc()}
+}
+
+func (s *Access) GetMysql() *Mysql {
+	return s.mysql
+}
+
+func (s *Access) Reset() {
+	Instance().Free(s.mysql)
+}

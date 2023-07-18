@@ -1,0 +1,204 @@
+package sq
+
+import (
+	_ "net/http/pprof"
+	"sync"
+
+	"github.com/cwloo/gonet/core/base/mq"
+	"github.com/cwloo/gonet/core/cb"
+)
+
+// <summary>
+// queue slice阻塞队列
+// <summary>
+type queue struct {
+	lock  *sync.Mutex
+	cond  *sync.Cond
+	slice []any
+}
+
+func NewQueue(size int) mq.BlockQueue {
+	// if size <= 0 {
+	// 	panic(errors.New("error"))
+	// }
+	s := &queue{lock: &sync.Mutex{}}
+	s.cond = sync.NewCond(s.lock)
+	return s
+}
+
+func (s *queue) Name() string {
+	return "slice"
+}
+
+func (s *queue) Push(data any) {
+	s.lock.Lock()
+	s.slice = append(s.slice, data)
+	s.cond.Signal()
+	s.lock.Unlock()
+}
+
+// 一次取一个
+func (s *queue) Pop() (data any, exit, empty bool, code int) {
+	s.lock.Lock()
+	for len(s.slice) == 0 {
+		s.cond.Wait()
+	}
+	length := len(s.slice)
+	data = s.slice[0]
+	if data == nil {
+		exit = true
+	} else if m, ok := data.(*mq.ExitStruct); ok {
+		exit = true
+		code = m.Code
+	}
+	if length > 1 {
+		s.slice = s.slice[1:]
+	} else {
+		// s.slice = s.slice[0:0]
+		s.slice = []any{}
+	}
+	s.lock.Unlock()
+	return
+}
+
+// 批量全部取
+func (s *queue) Pick() (v []any) {
+	s.lock.Lock()
+	for len(s.slice) == 0 {
+		s.cond.Wait()
+	}
+	v = s.slice[:]
+	s.slice = []any{}
+	s.lock.Unlock()
+	return
+}
+
+// 批量全部取直到遇到nil
+func (s *queue) Pick_until() (v []any, exit bool, code int) {
+	s.lock.Lock()
+	for len(s.slice) == 0 {
+		s.cond.Wait()
+	}
+	// for i, data := range s.slice {
+	// 	if data == nil {
+	// 		s.slice = append(s.slice[:i], s.slice[i+1:]...)
+	// 		exit = true
+	// 		break
+	// 	} else {
+	// 		v = append(v, data)
+	// 		s.slice = append(s.slice[:i], s.slice[i+1:]...)
+	// 	}
+	// }
+	for i := 0; i < len(s.slice); i++ {
+		if s.slice[i] == nil {
+			s.slice = append(s.slice[:i], s.slice[i+1:]...)
+			exit = true
+			break
+		} else if m, ok := s.slice[i].(*mq.ExitStruct); ok {
+			exit = true
+			code = m.Code
+			break
+		} else {
+			v = append(v, s.slice[i])
+			s.slice = append(s.slice[:i], s.slice[i+1:]...)
+		}
+	}
+	s.lock.Unlock()
+	return
+}
+
+func (s *queue) exec_step(handler cb.Processor, args ...any) (exit bool, code int) {
+	msg, EXIT, empty, CODE := s.Pop()
+	if EXIT {
+		exit = EXIT
+		code = CODE
+	} else if !empty {
+		if _, ok := msg.(*mq.WakeupStruct); !ok {
+			if handler(msg, args...) {
+				exit = true
+				return
+			}
+		}
+	}
+	return
+}
+
+func (s *queue) exec_step_until(handler cb.Processor, args ...any) (exit bool, code int) {
+	msg, EXIT, empty, CODE := s.Pop()
+	if EXIT {
+		exit = EXIT
+		code = CODE
+	} else if !empty {
+		if _, ok := msg.(*mq.WakeupStruct); !ok {
+			if handler(msg, args...) {
+				exit = true
+				return
+			}
+		}
+	}
+	return
+}
+
+func (s *queue) exec_all(handler cb.Processor, args ...any) (exit bool, code int) {
+	msgs := s.Pick()
+	for _, msg := range msgs {
+		if msg == nil {
+			exit = true
+		} else if m, ok := msg.(*mq.ExitStruct); ok {
+			exit = true
+			code = m.Code
+		} else if _, ok := msg.(*mq.WakeupStruct); !ok {
+			if handler(msg, args...) {
+				exit = true
+				return
+			}
+		}
+	}
+	return
+}
+
+func (s *queue) exec_all_until(handler cb.Processor, args ...any) (exit bool, code int) {
+	msgs, EXIT, CODE := s.Pick_until()
+	for _, msg := range msgs {
+		if _, ok := msg.(*mq.WakeupStruct); !ok {
+			if handler(msg, args...) {
+				exit = true
+				return
+			}
+		}
+	}
+	exit = EXIT
+	code = CODE
+	return
+}
+
+// 一次取一个或批量全部取
+func (s *queue) Exec(step bool, handler cb.Processor, args ...any) (exit bool, code int) {
+	if step {
+		exit, code = s.exec_step(handler, args...)
+	} else {
+		exit, code = s.exec_all(handler, args...)
+	}
+	return
+}
+
+// 一次取一个或批量全部取直到遇到nil
+func (s *queue) Exec_until(step bool, handler cb.Processor, args ...any) (exit bool, code int) {
+	if step {
+		exit, code = s.exec_step_until(handler, args...)
+	} else {
+		exit, code = s.exec_all_until(handler, args...)
+	}
+	return
+}
+
+func (s *queue) Size() int {
+	s.lock.Lock()
+	c := len(s.slice)
+	s.lock.Unlock()
+	return c
+}
+
+func (s *queue) Wakeup() {
+	s.Push(mq.NewWakeupStruct())
+}
