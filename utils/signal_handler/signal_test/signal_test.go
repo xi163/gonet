@@ -16,8 +16,7 @@ func Test(t *testing.T) {
 }
 
 func signal_handler_test(t *testing.T) {
-	signal_handler.RegisterStop(func() {
+	signal_handler.Wait(func() {
 		logs.Debugf("Stopping..")
 	})
-	signal_handler.Wait()
 }
