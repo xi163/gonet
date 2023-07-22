@@ -1,9 +1,10 @@
 package tern
 
 func IF[T any](cmp bool, a T, b T) T {
-	if cmp {
+	switch cmp {
+	case true:
 		return a
-	} else {
+	default:
 		return b
 	}
 }
