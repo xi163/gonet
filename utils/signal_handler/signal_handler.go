@@ -8,20 +8,17 @@ import (
 
 var sig Handler
 
-func RegisterStop(f func()) {
+func Wait(f func()) {
 	sig = newHandler(f)
 	go func() {
 		<-sig.Signal()
 		sig.Done()
 	}()
+	sig.Wait()
 }
 
 func Stop() {
 	sig.Stop()
-}
-
-func Wait() {
-	sig.Wait()
 }
 
 type Handler interface {
@@ -63,7 +60,6 @@ func (s *handler) Done() {
 
 func (s *handler) Wait() {
 	<-s.done
-	//Stop()或CTRL+C前执行清理
 	s.f()
 	close(s.done)
 }
