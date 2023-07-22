@@ -10,14 +10,14 @@ const (
 )
 
 var (
-	COLOR_Red    = "\033[1;31m"
-	COLOR_Green  = "\033[1;32m"
-	COLOR_Yellow = "\033[1;33m"
-	COLOR_Blue   = "\033[1;34m"
-	COLOR_Purple = "\033[1;35m"
-	COLOR_Cyan   = "\033[1;36m"
-	COLOR_Gray   = "\033[1;37m"
-	COLOR_White  = "\033[1;97m"
+	COLOR_Red    = "\033[0;31m"
+	COLOR_Green  = "\033[0;32m"
+	COLOR_Yellow = "\033[0;33m"
+	COLOR_Blue   = "\033[0;34m"
+	COLOR_Purple = "\033[0;35m"
+	COLOR_Cyan   = "\033[0;36m"
+	COLOR_Gray   = "\033[0;37m"
+	COLOR_White  = "\033[0;97m"
 )
 
 const (
