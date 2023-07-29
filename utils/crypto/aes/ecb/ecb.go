@@ -75,6 +75,7 @@ func (x *ecbEncrypter) CryptBlocks(dst, src []byte) {
 	}
 
 	for len(src) > 0 {
+		//x.b.Encrypt(dst, src[:x.blockSize])
 		x.b.Encrypt(dst[:x.blockSize], src[:x.blockSize])
 		src = src[x.blockSize:]
 		dst = dst[x.blockSize:]
@@ -138,6 +139,7 @@ func (x *ecbDecrypter) CryptBlocks(dst, src []byte) {
 	// }
 
 	for len(src) > 0 {
+		//x.b.Decrypt(dst, src[:x.blockSize])
 		x.b.Decrypt(dst[:x.blockSize], src[:x.blockSize])
 		src = src[x.blockSize:]
 		dst = dst[x.blockSize:]

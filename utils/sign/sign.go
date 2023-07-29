@@ -26,6 +26,7 @@ func Encode(data any, exp time.Time, secret []byte) string {
 		Timestamp: time.Now().UnixMilli(),
 		Expired:   exp.UnixMilli(),
 	}
+	logs.Errorf("==>>> %s", json.String(token))
 	encrypt := aes.CBCEncryptPKCS7(json.Bytes(token), secret, secret)
 	strBase64 := base64.URLEncode(encrypt)
 	return uri.URLEncode(strBase64)
