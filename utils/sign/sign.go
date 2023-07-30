@@ -6,7 +6,6 @@ import (
 
 	"github.com/cwloo/gonet/logs"
 	"github.com/cwloo/gonet/utils/codec/base64"
-	"github.com/cwloo/gonet/utils/codec/uri"
 	"github.com/cwloo/gonet/utils/crypto/aes"
 	"github.com/cwloo/gonet/utils/json"
 	"github.com/cwloo/gonet/utils/random"
@@ -27,15 +26,17 @@ func Encode(data any, exp time.Time, secret []byte) string {
 		Expired:   exp.UnixMilli(),
 	}
 	logs.Errorf("==>>> %s", json.String(token))
-	encrypt := aes.CBCEncryptPKCS7(json.Bytes(token), secret, secret)
+	encrypt := aes.ECBEncryptPKCS7(json.Bytes(token), secret, secret)
 	strBase64 := base64.URLEncode(encrypt)
-	return uri.URLEncode(strBase64)
+	//return uri.URLEncode(strBase64)
+	return strBase64
 }
 
 func Decode(s string, secret []byte) (v any, exp int64) {
-	strBase64 := uri.URLDecode(s)
+	//strBase64 := uri.URLDecode(s)
+	strBase64 := s
 	encrypt := base64.URLDecode(strBase64)
-	jsonStr := aes.CBCDecryptPKCS7(encrypt, secret, secret)
+	jsonStr := aes.ECBDecryptPKCS7(encrypt, secret, secret)
 	model := Sign{}
 	err := json.Parse(jsonStr, &model)
 	if err != nil {
