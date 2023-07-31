@@ -102,7 +102,7 @@ func (x *ecbEncrypter) SetIV(iv []byte) {
 	if len(iv) != len(x.iv) {
 		panic("cipher: incorrect length IV")
 	}
-	copy(x.iv, iv)
+	//copy(x.iv, iv)
 }
 
 type ecbDecrypter ecb
@@ -176,5 +176,5 @@ func (x *ecbDecrypter) SetIV(iv []byte) {
 	if len(iv) != len(x.iv) {
 		panic("cipher: incorrect length IV")
 	}
-	copy(x.iv, iv)
+	//copy(x.iv, iv)
 }
