@@ -194,6 +194,26 @@ func (s *proc) Post(data *event.Data) {
 	s.Do(data)
 }
 
+func (s *proc) PostConnected(peer conn.Session, v ...any) {
+	s.Post(event.Create(event.EVTConnected, event.CreateConnected(peer, v...), nil))
+}
+
+func (s *proc) PostConnectedWith(handler cb.OnConnected, peer conn.Session, v ...any) {
+	s.Post(event.Create(event.EVTConnected, event.CreateConnectedWith(handler, peer, v...), nil))
+}
+
+func (s *proc) PostClosing(d time.Duration, peer conn.Session) {
+	s.Post(event.Create(event.EVTClosing, event.CreateClosing(d, peer), nil))
+}
+
+func (s *proc) PostClosed(peer conn.Session, reason conn.Reason, v ...any) {
+	s.Post(event.Create(event.EVTClosed, event.CreateClosed(peer, reason, v...), nil))
+}
+
+func (s *proc) PostClosedWith(handler cb.OnClosed, peer conn.Session, reason conn.Reason, v ...any) {
+	s.Post(event.Create(event.EVTClosed, event.CreateClosedWith(handler, peer, reason, v...), nil))
+}
+
 func (s *proc) PostRead(cmd uint32, msg any, peer conn.Session) {
 	s.Post(event.Create(event.EVTRead, event.CreateRead(cmd, msg, peer), nil))
 }
@@ -208,10 +228,6 @@ func (s *proc) PostCustom(cmd uint32, msg any, peer conn.Session) {
 
 func (s *proc) PostCustomWith(handler cb.CustomCallback, cmd uint32, msg any, peer conn.Session) {
 	s.Post(event.Create(event.EVTCustom, event.CreateCustomWith(handler, cmd, msg, peer), nil))
-}
-
-func (s *proc) PostClosing(d time.Duration, peer conn.Session) {
-	s.Post(event.Create(event.EVTClosing, event.CreateClosing(d, peer), nil))
 }
 
 func (s *proc) Dispatch(c Proc) {

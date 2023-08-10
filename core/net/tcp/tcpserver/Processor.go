@@ -243,7 +243,7 @@ func (s *Processor) OnConnected(peer conn.Session, v ...any) {
 	}
 }
 
-func (s *Processor) OnClosed(peer conn.Session, reason conn.Reason) {
+func (s *Processor) OnClosed(peer conn.Session, reason conn.Reason, v ...any) {
 	if peer.Connected() {
 		logs.Fatalf("error")
 	} else {

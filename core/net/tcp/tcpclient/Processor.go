@@ -45,6 +45,7 @@ func NewTCPClient(name string, address ...string) TCPClient {
 	s.connector.SetRetryInterval(time.Second)
 	s.connector.SetProtocolCallback(s.onProtocol)
 	s.connector.SetNewConnectionCallback(s.newConnection)
+	s.connector.SetConnectErrorCallback(s.onConnectError)
 	s.SetConnectedCallback(s.OnConnected)
 	s.SetClosedCallback(s.OnClosed)
 	s.SetMessageCallback(s.OnMessage)
@@ -121,6 +122,11 @@ func (s *Processor) SetRetryInterval(d time.Duration) {
 func (s *Processor) SetProtocolCallback(cb cb.OnProtocol) {
 	s.assertConnector()
 	s.connector.SetProtocolCallback(cb)
+}
+
+func (s *Processor) SetConnectErrorCallback(cb cb.OnConnectError) {
+	s.assertConnector()
+	s.connector.SetConnectErrorCallback(cb)
 }
 
 func (s *Processor) SetConnectedCallback(cb cb.OnConnected) {
@@ -215,6 +221,9 @@ func (s *Processor) ConnectTCP(address ...string) {
 	s.connector.ConnectTCP(address...)
 }
 
+func (s *Processor) onConnectError(proto string, err error) {
+}
+
 func (s *Processor) OnConnected(peer conn.Session, v ...any) {
 	if peer.Connected() {
 		logs.Debugf("[%v] -> [%v]", peer.LocalAddr(), peer.RemoteAddr())
@@ -223,7 +232,7 @@ func (s *Processor) OnConnected(peer conn.Session, v ...any) {
 	}
 }
 
-func (s *Processor) OnClosed(peer conn.Session, reason conn.Reason) {
+func (s *Processor) OnClosed(peer conn.Session, reason conn.Reason, v ...any) {
 	if peer.Connected() {
 		logs.Fatalf("error")
 	} else {

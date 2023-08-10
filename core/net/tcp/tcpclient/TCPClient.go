@@ -24,6 +24,7 @@ type TCPClient interface {
 	SetIdleTimeout(timeout, d time.Duration)
 	SetRetryInterval(d time.Duration)
 	SetProtocolCallback(cb cb.OnProtocol)
+	SetConnectErrorCallback(cb cb.OnConnectError)
 	SetConnectedCallback(cb cb.OnConnected)
 	SetClosedCallback(cb cb.OnClosed)
 	SetMessageCallback(cb cb.OnMessage)

@@ -27,6 +27,7 @@ type Connector interface {
 	ConnectTCP(address ...string)
 	SetProtocolCallback(cb cb.OnProtocol)
 	SetNewConnectionCallback(cb cb.OnNewConnection)
+	SetConnectErrorCallback(cb cb.OnConnectError)
 	GetIdleTimeout() time.Duration
 	SetIdleTimeout(d time.Duration)
 	SetDialTimeout(d time.Duration)
@@ -46,6 +47,7 @@ type connector struct {
 	channel         transmit.Channel
 	onProtocol      cb.OnProtocol
 	onNewConnection cb.OnNewConnection
+	onConnectError  cb.OnConnectError
 }
 
 func NewConnector(name string, address ...string) Connector {
@@ -102,6 +104,10 @@ func (s *connector) SetNewConnectionCallback(cb cb.OnNewConnection) {
 	s.onNewConnection = cb
 }
 
+func (s *connector) SetConnectErrorCallback(cb cb.OnConnectError) {
+	s.onConnectError = cb
+}
+
 func (s *connector) assertProtocol() {
 	if s.onProtocol == nil {
 		panic(errors.New("error"))
@@ -118,7 +124,8 @@ func (s *connector) connectTCPTimeout(addr *conn.Address, d time.Duration) error
 	logs.Debugf("%s", addr.Format())
 	c, err := net.DialTimeout(addr.Proto, addr.Addr, d)
 	if err != nil {
-		logs.Errorf(err.Error())
+		// logs.Errorf(err.Error())
+		s.onConnectError(addr.Proto, err)
 		return err
 	}
 	switch conn.UsePool {
@@ -140,7 +147,8 @@ func (s *connector) connectWSTimeout(addr *conn.Address, d time.Duration) error 
 	logs.Debugf("%s", addr.Format())
 	c, _, err := dialer.Dial(u.String(), nil)
 	if err != nil {
-		logs.Errorf(err.Error())
+		// logs.Errorf(err.Error())
+		s.onConnectError(addr.Proto, err)
 		return err
 	}
 	switch conn.UsePool {
@@ -177,7 +185,7 @@ func (s *connector) ConnectTCP(address ...string) {
 }
 
 func (s *connector) reconnect() {
-	logs.Debugf("%v %v", s.name, s.addr.Addr)
+	// logs.Debugf("%v %v", s.name, s.addr.Addr)
 	switch s.addr.Proto {
 	case "tcp":
 		if s.connectTCPTimeout(s.addr, s.dialTimeout) != nil && s.retry {

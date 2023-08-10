@@ -17,9 +17,11 @@ type OnProtocol func(proto string) transmit.Channel
 
 type OnNewConnection func(conn any, channel transmit.Channel, protoName string, v ...any)
 
+type OnConnectError func(proto string, err error)
+
 type OnConnected func(peer conn.Session, v ...any)
 
-type OnClosed func(peer conn.Session, reason conn.Reason)
+type OnClosed func(peer conn.Session, reason conn.Reason, v ...any)
 
 type OnMessage func(peer conn.Session, msg any, recvTime timestamp.T)
 

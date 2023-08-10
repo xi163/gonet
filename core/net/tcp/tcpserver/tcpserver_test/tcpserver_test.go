@@ -85,7 +85,7 @@ func (s *EchoServer) onConnected(peer conn.Session, v ...any) {
 	}
 }
 
-func (s *EchoServer) onClosed(peer conn.Session, reason conn.Reason) {
+func (s *EchoServer) onClosed(peer conn.Session, reason conn.Reason, v ...any) {
 	if peer.Connected() {
 		panic("error")
 	} else {
