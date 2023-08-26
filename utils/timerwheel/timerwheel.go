@@ -83,6 +83,6 @@ func (s *timerWheel) this() bool {
 
 func (s *timerWheel) assertThisThread() {
 	if !s.this() {
-		panic(logs.SprintErrorf("非线程安全 %v", s.tid))
+		panic(logs.SprintErrorf(3, "非线程安全 %v", s.tid))
 	}
 }

@@ -9,7 +9,6 @@ import (
 	"github.com/cwloo/gonet/core/base/mq"
 	"github.com/cwloo/gonet/core/base/run"
 	"github.com/cwloo/gonet/core/cb"
-	"github.com/cwloo/gonet/utils/safe"
 )
 
 // <summary>
@@ -178,7 +177,7 @@ func SafeCall(
 	b bool,
 	handler cb.Processor,
 	args ...any) (err error) {
-	defer safe.Catch()
+	defer Catch()
 	f(b, handler, args...)
 	return
 }

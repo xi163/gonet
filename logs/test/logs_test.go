@@ -29,7 +29,7 @@ func Test(t *testing.T) {
 func out_test(t *testing.T) {
 	color_linux.EnumColorStyle()
 
-	logs.InfofP("errMsg=%v", logs.SprintErrorf("error"))
+	logs.InfofP("errMsg=%v", logs.SprintErrorf(3, "error"))
 
 	logs.InfofP("------------------------ F_DETAIL")
 	logs.SetStyle(logs.F_DETAIL)

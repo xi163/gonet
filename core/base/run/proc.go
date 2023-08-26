@@ -10,7 +10,6 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 	"github.com/cwloo/gonet/core/net/conn"
 	"github.com/cwloo/gonet/utils/gid"
-	"github.com/cwloo/gonet/utils/safe"
 )
 
 // <summary>
@@ -102,7 +101,7 @@ func (s *proc) Args() Args {
 }
 
 func (s *proc) Run() {
-	defer safe.Catch()
+	defer Catch()
 	s.assertRunner()
 	s.assertArgs()
 	s.run.Run(s)

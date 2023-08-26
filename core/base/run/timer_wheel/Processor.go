@@ -11,7 +11,6 @@ import (
 	"github.com/cwloo/gonet/core/base/run"
 	"github.com/cwloo/gonet/core/base/timer"
 	"github.com/cwloo/gonet/core/cb"
-	"github.com/cwloo/gonet/utils/safe"
 )
 
 // <summary>
@@ -166,7 +165,6 @@ EXIT:
 			s.begin(arg)
 			timer.Poll(proc.Tid(), timercb)
 			s.end(arg)
-			break
 		// case c, _ := <-timerv2.Do():
 		// 	s.begin(arg)
 		// 	safe.Call(c.Call)
@@ -198,7 +196,6 @@ EXIT:
 					panic(errors.New("error: channel closed"))
 				}
 			}
-			break
 		case <-s.mq.Signal():
 			s.begin(arg)
 			exit, _ := s.mq.Exec_until(false, s.handler, proc)
@@ -208,7 +205,6 @@ EXIT:
 				break
 			}
 			s.end(arg)
-			break
 			// case <-tickerGC.Trigger():
 			// 	if s.Gc(proc.Args()) {
 			// 		if s.Count() == 1 {
@@ -328,7 +324,7 @@ func SafeCall(
 	b bool,
 	handler cb.Processor,
 	args ...any) (err error) {
-	defer safe.Catch()
+	defer run.Catch()
 	f(b, handler, args...)
 	return
 }

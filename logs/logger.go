@@ -18,6 +18,7 @@ import (
 	"github.com/cwloo/gonet/core/base/mq/lq"
 	"github.com/cwloo/gonet/core/base/pipe"
 	"github.com/cwloo/gonet/core/base/run"
+	"github.com/cwloo/gonet/utils/Fn"
 	"github.com/cwloo/gonet/utils/conv"
 	"github.com/cwloo/gonet/utils/gid"
 )
@@ -374,7 +375,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		//W101106 CST 21:17:00.024254 199 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
-		pg, fn := _fn(runtime.FuncForPC(pc).Name())
+		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
 		var b strings.Builder
 		switch ok {
 		case true:
@@ -388,7 +389,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(" ")
 		switch ok {
 		case true:
-			b.WriteString(_tz(s.arg.getTimezone()))
+			b.WriteString(String(s.arg.getTimezone()))
 			b.WriteString(" ")
 			b.WriteString(dt)
 			b.WriteString(" ")
@@ -419,7 +420,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		switch ok {
 		case true:
 			b.WriteString(" ")
-			b.WriteString(_tz(s.arg.getTimezone()))
+			b.WriteString(String(s.arg.getTimezone()))
 			b.WriteString(" ")
 			b.WriteString(dt)
 		}
@@ -428,7 +429,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 	case F_FN, F_FN_SYNC: //F_FN
 		//W101106][main] server.run xxx
 		pc, _, _, _ := runtime.Caller(skip)
-		pg, fn := _fn(runtime.FuncForPC(pc).Name())
+		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
 		var b strings.Builder
 		switch ok {
 		case true:
@@ -448,7 +449,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC: //F_TMSTMP_FN
 		//W101106 CST 21:17:00.024254][main] server.run xxx
 		pc, _, _, _ := runtime.Caller(skip)
-		pg, fn := _fn(runtime.FuncForPC(pc).Name())
+		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
 		var b strings.Builder
 		switch ok {
 		case true:
@@ -462,7 +463,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		switch ok {
 		case true:
 			b.WriteString(" ")
-			b.WriteString(_tz(s.arg.getTimezone()))
+			b.WriteString(String(s.arg.getTimezone()))
 			b.WriteString(" ")
 			b.WriteString(dt)
 		}
@@ -509,7 +510,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(" ")
 		switch ok {
 		case true:
-			b.WriteString(_tz(s.arg.getTimezone()))
+			b.WriteString(String(s.arg.getTimezone()))
 			b.WriteString(" ")
 			b.WriteString(dt)
 			b.WriteString(" ")
@@ -523,7 +524,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		//W101106 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
-		pg, fn := _fn(runtime.FuncForPC(pc).Name())
+		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
 		var b strings.Builder
 		switch ok {
 		case true:
@@ -548,7 +549,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		//W101106 CST 21:17:00.024254 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
-		pg, fn := _fn(runtime.FuncForPC(pc).Name())
+		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
 		var b strings.Builder
 		switch ok {
 		case true:
@@ -562,7 +563,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(" ")
 		switch ok {
 		case true:
-			b.WriteString(_tz(s.arg.getTimezone()))
+			b.WriteString(String(s.arg.getTimezone()))
 			b.WriteString(" ")
 			b.WriteString(dt)
 			b.WriteString(" ")
