@@ -28,11 +28,11 @@ const (
 // 	Crc      [2]byte //CRC校验位
 // 	Ver      [2]byte //版本号
 // 	Sign     [2]byte //签名
-// 	MainID   byte    //主消息mainID
-// 	SubID    byte    //子消息subID
+// 	MainId   byte    //主消息mainID
+// 	SubId    byte    //子消息subID
 // 	EncType  byte    //加密类型
 // 	Reserved byte    //预留
-// 	ReqID    [4]byte
+// 	ReqId    [4]byte
 // 	RealSize [2]byte //用户数据长度
 // }
 
@@ -40,11 +40,11 @@ const (
 // 	Len      [2]byte
 // 	Kicking  [2]int8
 // 	Ok       [4]int8
-// 	UserID   [8]int8
+// 	UserId   [8]int8
 // 	Ipaddr   uint32           //来自真实IP
 // 	Session  [SESSIONSZ]uint8 //用户会话
 // 	Aeskey   [AESKEYSZ]uint8  //AES_KEY
-// 	// ServID   [SERVIDSZ]uint8  //来自节点ID
+// 	ServId   [SERVIDSZ]uint8  //来自节点ID
 // 	Checksum uint16           //校验和CHKSUM
 // }
 
