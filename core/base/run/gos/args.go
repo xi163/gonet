@@ -12,28 +12,14 @@ import (
 // Args 协程启动参数
 // <summary>
 type Args struct {
-	state    cc.AtomFlag
 	stopping cc.Singal
 }
 
 func newArgs(proc run.Proc) run.Args {
 	s := &Args{
-		state:    cc.NewAtomFlag(),
 		stopping: cc.NewSingal(),
 	}
 	return s
-}
-
-func (s *Args) SetState(busy bool) {
-	if busy {
-		s.state.Set()
-	} else {
-		s.state.Reset()
-	}
-}
-
-func (s *Args) Busing() bool {
-	return s.state.IsSet()
 }
 
 func (s *Args) Quit() bool {

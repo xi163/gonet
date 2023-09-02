@@ -3,9 +3,8 @@ package logs
 import (
 	"errors"
 	"runtime"
-	"time"
 
-	"github.com/cwloo/gonet/core/base/cc"
+	// "github.com/cwloo/gonet/core/base/cc"
 	"github.com/cwloo/gonet/core/base/mq"
 	"github.com/cwloo/gonet/core/base/run"
 	"github.com/cwloo/gonet/core/cb"
@@ -16,38 +15,25 @@ import (
 // <summary>
 type Processor struct {
 	run.Processor
-	mq          mq.BlockQueue
-	counter     cc.Counter
-	idleCounter cc.Counter
-	handler     cb.Processor
-	gcCondition run.GcCondition
+	mq      mq.BlockQueue
+	handler cb.Processor
 }
 
 func NewProcessor(handler cb.Processor) run.Processor {
-	s := &Processor{
-		handler:     handler,
-		counter:     cc.NewAtomCounter(),
-		idleCounter: cc.NewAtomCounter(),
+	return &Processor{
+		handler: handler,
 	}
-	return s
 }
 
 func NewProcessorWith(q mq.BlockQueue, handler cb.Processor) run.Processor {
-	s := &Processor{
-		mq:          q,
-		handler:     handler,
-		counter:     cc.NewAtomCounter(),
-		idleCounter: cc.NewAtomCounter(),
+	return &Processor{
+		mq:      q,
+		handler: handler,
 	}
-	return s
 }
 
 func (s *Processor) SetProcessor(handler cb.Processor) {
 	s.handler = handler
-}
-
-func (s *Processor) SetGcCondition(handler run.GcCondition) {
-	s.gcCondition = handler
 }
 
 func (s *Processor) Name() string {
@@ -78,23 +64,17 @@ func (s *Processor) NewArgs(proc run.Proc) run.Args {
 }
 
 func (s *Processor) Run(proc run.Proc) {
-	// logs.Debugf("%s started...", proc.Name())
 	if s.mq == nil {
 		panic(errors.New("error: logs.Processor.mq is nil"))
 	}
 	if s.handler == nil {
 		panic(errors.New("error: logs.Processor.handler is nil"))
 	}
-	// if s.gcCondition == nil {
-	// 	panic(errors.New("error: logs.Processor.gcCondition is nil"))
-	// }
 	if proc.Args() == nil {
 		panic(errors.New("error: logs.Processor.args is nil"))
 	}
 	// arg := proc.Args().(*Args)
-	tickerGC := run.NewTrigger(10 * time.Second)
-	// s.counter.Up()
-	// s.idleCounter.Up()
+	// tickerGC := run.NewTrigger(10 * time.Second)
 	flag := run.STOP
 	i, t := 0, 200
 EXIT:
@@ -110,9 +90,7 @@ EXIT:
 			break EXIT
 		}
 	}
-	tickerGC.Stop()
-	// s.idleCounter.Down()
-	// s.counter.Down()
+	// tickerGC.Stop()
 	s.trace(proc.Name(), flag)
 }
 
@@ -132,44 +110,7 @@ func (s *Processor) trace(name string, flag run.EndType) {
 	}
 }
 
-func (s *Processor) IdleUp() {
-	s.idleCounter.Up()
-}
-
-func (s *Processor) IdleDown() {
-	s.idleCounter.Down()
-}
-
-func (s *Processor) begin(arg run.Args) {
-	arg.SetState(true)
-	// s.idleCounter.Down()
-}
-
-func (s *Processor) end(arg run.Args) {
-	arg.SetState(false)
-	s.idleCounter.Up()
-}
-
-func (s *Processor) flush(arg run.Args, v ...any) {
-	// s.begin(arg)
-	if s.counter.Count() > 1 {
-		SafeCall(s.mq.Exec, true, s.handler, v...)
-	} else {
-		SafeCall(s.mq.Exec, false, s.handler, v...)
-	}
-	// s.end(arg)
-}
-
-func (s *Processor) Count() int {
-	return s.counter.Count()
-}
-
-func (s *Processor) IdleCount() int {
-	return s.idleCounter.Count()
-}
-
 func (s *Processor) Wait() {
-	// s.counter.Wait()
 }
 
 func SafeCall(

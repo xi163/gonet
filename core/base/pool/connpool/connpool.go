@@ -20,14 +20,6 @@ func GoTimeout(d time.Duration, f cb.Functor, fn cb.Functor) {
 	conns.DoTimeout(d, f, fn)
 }
 
-func Num() int {
-	return conns.Num()
-}
-
-func ResetNum() {
-	conns.ResetNum()
-}
-
 func Start() {
 	conns.Start()
 }

@@ -25,13 +25,8 @@ type Processor interface {
 	Name() string
 	Queue() mq.Queue
 	SetQueue(q mq.Queue)
-	Wait()
-	Count() int
-	IdleCount() int
-	IdleUp()
-	IdleDown()
-	NewArgs(proc Proc) Args
 	SetProcessor(handler cb.Processor)
-	SetGcCondition(handler GcCondition)
+	NewArgs(proc Proc) Args
 	Run(proc Proc)
+	Wait()
 }

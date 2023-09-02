@@ -19,7 +19,6 @@ import (
 // Args 协程启动参数
 // <summary>
 type Args struct {
-	state    cc.AtomFlag
 	stopping cc.Singal
 	ticker   *time.Ticker
 	trigger  <-chan time.Time
@@ -31,7 +30,6 @@ type Args struct {
 func newArgs(proc run.Proc, d time.Duration) run.Args {
 	ticker, trigger := run.NewTicker(d)
 	s := &Args{
-		state:    cc.NewAtomFlag(),
 		stopping: cc.NewSingal(),
 		ticker:   ticker,
 		trigger:  trigger,
@@ -39,18 +37,6 @@ func newArgs(proc run.Proc, d time.Duration) run.Args {
 		// timerv2:  timerv2.NewSafeTimerScheduel(),
 	}
 	return s
-}
-
-func (s *Args) SetState(busy bool) {
-	if busy {
-		s.state.Set()
-	} else {
-		s.state.Reset()
-	}
-}
-
-func (s *Args) Busing() bool {
-	return s.state.IsSet()
 }
 
 func (s *Args) Quit() bool {

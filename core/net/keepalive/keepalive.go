@@ -36,7 +36,6 @@ func NewBuckets() Buckets {
 	switch s.pipe {
 	case nil:
 	default:
-		s.pipe.AssociatedUp()
 	}
 	return s
 }
@@ -84,7 +83,6 @@ func (s *keepalive) Put() {
 	switch s.pipe {
 	case nil:
 	default:
-		s.pipe.AssociatedDown()
 	}
 	t.Put(s)
 }

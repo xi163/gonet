@@ -5,7 +5,6 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/cwloo/gonet/core/base/cc"
 	"github.com/cwloo/gonet/core/base/mq"
 	"github.com/cwloo/gonet/core/base/mq/ch"
 	"github.com/cwloo/gonet/core/base/run"
@@ -18,54 +17,39 @@ import (
 // <summary>
 type Processor struct {
 	run.Processor
-	size        int32
-	mq          ch.Queue
-	counter     cc.Counter
-	idleCounter cc.Counter
-	tick        bool
-	d           time.Duration
-	handler     cb.Processor
-	gcCondition run.GcCondition
-	timerCb     timer.TimerCallback
+	mq      ch.Queue
+	handler cb.Processor
+	size    int32
+	tick    bool
+	d       time.Duration
+	timerCb timer.TimerCallback
 }
 
 func NewProcessor(size int32, tick bool, d time.Duration, handler cb.Processor, timerCb timer.TimerCallback) run.Processor {
 	s := &Processor{
-		tick:        tick,
-		size:        size,
-		d:           d,
-		handler:     handler,
-		timerCb:     timerCb,
-		counter:     cc.NewAtomCounter(),
-		idleCounter: cc.NewAtomCounter(),
+		tick:    tick,
+		size:    size,
+		d:       d,
+		handler: handler,
+		timerCb: timerCb,
 	}
-	s.SetGcCondition(s.GcCondition)
 	return s
 }
 
 func NewProcessorWith(q ch.Queue, tick bool, size int32, d time.Duration, handler cb.Processor, timerCb timer.TimerCallback) run.Processor {
 	s := &Processor{
-		tick:        tick,
-		size:        size,
-		mq:          q,
-		d:           d,
-		handler:     handler,
-		timerCb:     timerCb,
-		counter:     cc.NewAtomCounter(),
-		idleCounter: cc.NewAtomCounter(),
+		tick:    tick,
+		size:    size,
+		mq:      q,
+		d:       d,
+		handler: handler,
+		timerCb: timerCb,
 	}
-	s.SetGcCondition(s.GcCondition)
 	return s
 }
 
 func (s *Processor) SetProcessor(handler cb.Processor) {
 	s.handler = handler
-}
-
-func (s *Processor) SetGcCondition(handler run.GcCondition) {
-	if s.gcCondition != nil {
-		s.gcCondition = handler
-	}
 }
 
 func (s *Processor) Name() string {
@@ -137,8 +121,6 @@ func (s *Processor) Run(proc run.Proc) {
 	if timercb == nil {
 		panic(errors.New("error: timerwheel.Processor.timerCb is nil"))
 	}
-	s.counter.Up()
-	// s.idleCounter.Up()
 	arg := proc.Args().(*Args)
 	s.startTicker(proc.Args(), proc.Args())
 	tickerGC := run.NewTrigger(10 * time.Second)
@@ -155,16 +137,16 @@ EXIT:
 		i++
 		select {
 		case <-arg.stopping.Read():
-			if s.Count() == 1 {
-				s.mq.AssertEmpty()
-				s.flush(arg, proc)
-			}
+			//if s.Count() == 1 {
+			s.mq.AssertEmpty()
+			s.flush(arg, proc)
+			//}
 			flag = run.QUIT
 			break EXIT
 		case <-trigger:
-			s.begin(arg)
+			//s.begin(arg)
 			timer.Poll(proc.Tid(), timercb)
-			s.end(arg)
+			//s.end(arg)
 		// case c, _ := <-timerv2.Do():
 		// 	s.begin(arg)
 		// 	safe.Call(c.Call)
@@ -176,15 +158,15 @@ EXIT:
 					// panic(errors.New("error: msg is nil"))
 					s.mq.Reset()
 				} else {
-					s.begin(arg)
+					//s.begin(arg)
 					s.handler(msg, proc)
 					exit, _ := s.mq.Exec_until(false, s.handler, proc)
 					if exit {
 						s.mq.Reset()
-						s.end(arg)
+						//s.end(arg)
 						break
 					}
-					s.end(arg)
+					// s.end(arg)
 				}
 			} else {
 				if msg == nil {
@@ -197,14 +179,14 @@ EXIT:
 				}
 			}
 		case <-s.mq.Signal():
-			s.begin(arg)
+			//s.begin(arg)
 			exit, _ := s.mq.Exec_until(false, s.handler, proc)
 			if exit {
 				s.mq.Reset()
-				s.end(arg)
+				//s.end(arg)
 				break
 			}
-			s.end(arg)
+			// s.end(arg)
 			// case <-tickerGC.Trigger():
 			// 	if s.Gc(proc.Args()) {
 			// 		if s.Count() == 1 {
@@ -227,8 +209,6 @@ EXIT:
 	timer.RemoveTimers()
 	ticker.Stop()
 	tickerGC.Stop()
-	s.idleCounter.Down()
-	s.counter.Down()
 	s.trace(proc.Name(), flag)
 }
 
@@ -248,76 +228,67 @@ func (s *Processor) trace(name string, flag run.EndType) {
 	}
 }
 
-func (s *Processor) IdleUp() {
-	s.idleCounter.Up()
-}
+// func (s *Processor) IdleUp() {
+// 	s.idleCounter.Up()
+// }
 
-func (s *Processor) IdleDown() {
-	s.idleCounter.Down()
-}
+// func (s *Processor) IdleDown() {
+// 	s.idleCounter.Down()
+// }
 
-func (s *Processor) begin(arg run.Args) {
-	arg.SetState(true)
-	// s.idleCounter.Down()
-}
+// func (s *Processor) begin(arg run.Args) {
+// 	arg.SetState(true)
+// 	// s.idleCounter.Down()
+// }
 
-func (s *Processor) end(arg run.Args) {
-	arg.SetState(false)
-	s.idleCounter.Up()
-}
+// func (s *Processor) end(arg run.Args) {
+// 	arg.SetState(false)
+// 	s.idleCounter.Up()
+// }
 
 func (s *Processor) flush(arg run.Args, v ...any) {
 	// s.begin(arg)
-	if s.counter.Count() > 1 {
-		SafeCall(s.mq.Exec, true, s.handler, v...)
-	} else {
-		SafeCall(s.mq.Exec, false, s.handler, v...)
-	}
+	//if s.counter.Count() > 1 {
+	//	SafeCall(s.mq.Exec, true, s.handler, v...)
+	//} else {
+	SafeCall(s.mq.Exec, false, s.handler, v...)
+	//}
 	// s.end(arg)
 }
 
-func (s *Processor) Count() int {
-	return s.counter.Count()
-}
-
-func (s *Processor) IdleCount() int {
-	return s.idleCounter.Count()
-}
-
 func (s *Processor) Wait() {
-	s.counter.Wait()
 }
 
 // GC垃圾回收
-func (s *Processor) Gc(args run.Args) (b bool) {
-	if s.gcCondition == nil {
-		return
-	}
-	if _, ok := s.gcCondition(s, args); ok {
-		b = ok
-	}
-	return
-}
+// func (s *Processor) Gc(args run.Args) (b bool) {
+// 	if s.gcCondition == nil {
+// 		return
+// 	}
+// 	if _, ok := s.gcCondition(s, args); ok {
+// 		b = ok
+// 	}
+// 	return
+// }
 
 // GC垃圾回收条件检查
-func (s Processor) GcCondition(r run.Processor, args run.Args) (n int, b bool) {
-	// 标记为啥mq等于nil ???
-	if s.mq == nil {
-		return
-	}
-	if q, ok := s.Queue().(ch.Queue); ok {
-		n = q.Length() + q.Size()
-		if s.IdleCount() > 0 {
-			b = true
-		}
-	} else {
-		n = s.Queue().Size()
-		if s.IdleCount() > 0 {
-			b = true
-		}
-	}
-	return
-}
+// func (s Processor) GcCondition(r run.Processor, args run.Args) (n int, b bool) {
+// 	// 标记为啥mq等于nil ???
+// 	if s.mq == nil {
+// 		return
+// 	}
+// 	if q, ok := s.Queue().(ch.Queue); ok {
+// 		n = q.Length() + q.Size()
+// 		if s.IdleCount() > 0 {
+// 			b = true
+// 		}
+// 	} else {
+// 		n = s.Queue().Size()
+// 		if s.IdleCount() > 0 {
+// 			b = true
+// 		}
+// 	}
+// 	return
+// }
 
 func SafeCall(
 	f func(bool, cb.Processor, ...any) (exit bool, code int),

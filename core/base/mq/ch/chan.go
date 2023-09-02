@@ -14,23 +14,22 @@ import (
 // <summary>
 type Chan struct {
 	nonblock bool
-	n, size  int32
+	size     int32
 	mq       chan any
 	wakeup   chan bool
 	pendings mq.Queue
 	closed   [2]cc.AtomFlag
 }
 
-func NewChan(n, size int, nonblock bool) Queue {
-	if n <= 0 || size <= 0 {
-		panic(errors.New("NewChan error: n, size"))
+func NewChan(size int, nonblock bool) Queue {
+	if size <= 0 {
+		panic(errors.New("NewChan error: size"))
 	}
 	s := &Chan{
 		nonblock: nonblock,
-		n:        int32(n),
 		size:     int32(size),
 		mq:       make(chan any, size),
-		wakeup:   make(chan bool, n),
+		wakeup:   make(chan bool, 1),
 		pendings: lq.NewList(1000),
 		closed:   [2]cc.AtomFlag{cc.NewAtomFlag(), cc.NewAtomFlag()},
 	}

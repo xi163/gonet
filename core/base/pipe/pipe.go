@@ -24,9 +24,6 @@ type Pipe interface {
 	Runner() run.Processor
 	Do(data any)
 	DoTimeout(d time.Duration, data any, cb cb.Functor)
-	AssociatedUp()
-	AssociatedDown()
-	AssociatedCount() int
 	Close()
 	NotifyClose() bool
 }
@@ -36,7 +33,6 @@ type pipe struct {
 	mq   mq.Queue
 	run  run.Processor
 	flag cc.AtomFlag
-	c    cc.Counter
 	cb   func(slot run.Slot)
 }
 
@@ -46,14 +42,12 @@ func format(id int32, name string, q mq.Queue, r run.Processor) string {
 
 func NewPipe(id int32, name string, size int, nonblock bool, r run.Processor) Pipe {
 	s := &pipe{
-		mq:   ch.NewChan(1, size, nonblock),
+		mq:   ch.NewChan(size, nonblock),
 		run:  r,
 		flag: cc.NewAtomFlag(),
-		c:    cc.NewAtomCounter(),
 	}
 	s.assertRunner()
 	s.run.SetQueue(s.mq)
-	s.run.IdleUp() //空闲协程数量递增
 	s.slot = run.NewSlot(id, format(id, name, s.mq, s.run), s.onQuit)
 	s.slot.Sched(s.run)
 	return s
@@ -64,11 +58,9 @@ func NewPipeWith(id int32, name string, q mq.Queue, r run.Processor) Pipe {
 		mq:   q,
 		run:  r,
 		flag: cc.NewAtomFlag(),
-		c:    cc.NewAtomCounter(),
 	}
 	s.assertRunner()
 	s.run.SetQueue(s.mq)
-	s.run.IdleUp() //空闲协程数量递增
 	s.slot = run.NewSlot(id, format(id, name, s.mq, s.run), s.onQuit)
 	s.slot.Sched(s.run)
 	return s
@@ -79,12 +71,10 @@ func NewPipeWithQuit(id int32, name string, q mq.Queue, r run.Processor, onQuit 
 		mq:   q,
 		run:  r,
 		flag: cc.NewAtomFlag(),
-		c:    cc.NewAtomCounter(),
 		cb:   onQuit,
 	}
 	s.assertRunner()
 	s.run.SetQueue(s.mq)
-	s.run.IdleUp() //空闲协程数量递增
 	s.slot = run.NewSlot(id, format(id, name, s.mq, s.run), s.onQuit)
 	s.slot.Sched(s.run)
 	return s
@@ -98,18 +88,6 @@ func (s *pipe) ID() int32 {
 func (s *pipe) Name() string {
 	s.assertSlot()
 	return s.slot.Name()
-}
-
-func (s *pipe) AssociatedUp() {
-	s.c.Up()
-}
-
-func (s *pipe) AssociatedDown() {
-	s.c.Down()
-}
-
-func (s *pipe) AssociatedCount() int {
-	return s.c.Count()
 }
 
 func (s *pipe) assertSlot() {

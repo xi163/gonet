@@ -21,7 +21,6 @@ type Proc interface {
 	event.Proc
 	Tid() int
 	Name() string
-	Busing() bool
 	AssertThis()
 	Runner() Processor
 	Args() Args
@@ -55,7 +54,7 @@ func NewProc(name string, r Processor) Proc {
 	return s
 }
 
-func (s proc) Name() string {
+func (s *proc) Name() string {
 	return s.name
 }
 
@@ -108,18 +107,13 @@ func (s *proc) Run() {
 	s.run = nil
 }
 
-func (s *proc) Busing() bool {
-	s.assertArgs()
-	return s.args.Busing()
-}
-
-func (s proc) assertArgs() {
+func (s *proc) assertArgs() {
 	if s.args == nil {
 		panic(errors.New("proc.args is nil"))
 	}
 }
 
-func (s proc) assertRunner() {
+func (s *proc) assertRunner() {
 	if s.run == nil {
 		panic(errors.New("proc.run is nil"))
 	}

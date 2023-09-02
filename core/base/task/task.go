@@ -10,6 +10,7 @@ import (
 	"github.com/cwloo/gonet/core/base/mq"
 	"github.com/cwloo/gonet/core/base/mq/ch"
 	"github.com/cwloo/gonet/core/base/mq/lq"
+	"github.com/cwloo/gonet/core/base/mq/sq"
 	"github.com/cwloo/gonet/core/base/run"
 	"github.com/cwloo/gonet/core/base/watcher"
 	"github.com/cwloo/gonet/core/cb"
@@ -28,14 +29,12 @@ type Task interface {
 	Start()
 	Stop()
 	SetNew(handler mq.New)
-	SetOverload(handler run.Overload)
 	SetProcessor(handler cb.Processor)
-	SetGcCondition(handler run.GcCondition)
 }
 
 type task struct {
 	name     string
-	init, c  int
+	init     int
 	size     int
 	fixed    bool
 	nonblock bool
@@ -47,7 +46,6 @@ type task struct {
 	flag     [2]cc.AtomFlag
 	watcher  watcher.Watcher
 	New      mq.New
-	overload run.Overload
 }
 
 func NewTask(name string, init, size int, fixed, nonblock bool, r run.Processor) Task {
@@ -92,21 +90,9 @@ func (s *task) SetNew(handler mq.New) {
 	s.New = handler
 }
 
-func (s *task) SetOverload(handler run.Overload) {
-	if handler == nil {
-		panic(errors.New("error: task.SetOverload is nil"))
-	}
-	s.overload = handler
-}
-
 func (s *task) SetProcessor(handler cb.Processor) {
 	s.assertRunner()
 	s.run.SetProcessor(handler)
-}
-
-func (s *task) SetGcCondition(handler run.GcCondition) {
-	s.assertRunner()
-	s.run.SetGcCondition(handler)
 }
 
 func (s *task) Queue() mq.Queue {
@@ -144,15 +130,15 @@ func (s *task) do(data any) {
 	s.mq.Push(data)
 }
 
-func (s *task) Overload(r run.Processor) (n int, b bool) {
+func (s *task) overload(r run.Processor) (n int, b bool) {
 	if q, ok := r.Queue().(ch.Queue); ok {
-		n = 1 + q.Length() + q.Size()
-		if n > r.IdleCount() {
+		n = q.Length() + q.Size()
+		if n == 0 {
 			b = true
 		}
 	} else {
-		n = 1 + r.Queue().Size()
-		if n > r.IdleCount() {
+		n = r.Queue().Size()
+		if n == 0 {
 			b = true
 		}
 	}
@@ -160,9 +146,6 @@ func (s *task) Overload(r run.Processor) (n int, b bool) {
 }
 
 func (s *task) ensure() {
-	if s.overload == nil {
-		return
-	}
 	if !s.Fixed() {
 		if n, ok := s.overload(s.run); ok {
 			s.expand(2 * n)
@@ -180,7 +163,6 @@ func (s task) Nonblock() bool {
 
 func (s *task) expand(num int) {
 	for i := 0; i < num; i++ {
-		s.run.IdleUp() //空闲协程数量递增
 		id := s.i32.New()
 		slot := s.new_slot(id)
 		s.append(slot)
@@ -204,13 +186,13 @@ func (s *task) append(slot run.Slot) {
 func (s *task) start() {
 	if s.mq == nil && s.flag[0].TestSet() {
 		if s.init > 0 {
-			s.mq = s.New(s.init, s.size, s.nonblock)
+			s.mq = s.New(s.size, s.nonblock)
 			s.run.SetQueue(s.mq)
 			s.expand(s.init)
 		} else {
-			s.mq = s.New(s.size, s.size, s.nonblock)
+			s.mq = s.New(s.size, s.nonblock)
 			s.run.SetQueue(s.mq)
-			s.expand(s.size)
+			s.expand(1)
 		}
 		s.flag[0].Reset()
 	}
@@ -230,26 +212,20 @@ func (s *task) stop() {
 }
 
 func (s *task) New_chmq(v ...any) (q mq.Queue) {
-	if t, ok := ch.NewChan(v[0].(int), v[1].(int), v[2].(bool)).(mq.Queue); ok {
+	if t, ok := ch.NewChan(v[0].(int), v[1].(bool)).(mq.Queue); ok {
 		q = t
 		return
 	}
 	panic(errors.New("task.New_chmq error"))
 }
 
-// func (s *task) New_slicemq(v ...any) (q mq.Queue) {
-// 	if t, ok := sq.NewQueue(v[0].(int)).(mq.BlockQueue); ok {
-// 		q = t
-// 		return
-// 	}
-// 	panic(errors.New("task.New_slicemq error"))
-// }
+func (s *task) New_slicemq(v ...any) (q mq.Queue) {
+	q = sq.NewQueue(v[0].(int))
+	panic(errors.New("task.New_slicemq error"))
+}
 
 func (s *task) New_listmq(v ...any) (q mq.Queue) {
-	if t, ok := lq.NewQueue(v[0].(int)).(mq.BlockQueue); ok {
-		q = t
-		return
-	}
+	q = lq.NewQueue(v[0].(int))
 	panic(errors.New("task.New_listmq error"))
 }
 
@@ -266,10 +242,8 @@ func (s *task) remove(ids ...any) (exit bool) {
 			break
 		}
 		if id, ok := data.(int32); ok {
-			if _, ok := s.slots[id]; ok {
-				delete(s.slots, id)
-				// logs.Debugf("slot.%d left:%d...", id, len(s.slots))
-			}
+			delete(s.slots, id)
+			// logs.Debugf("slot.%d left:%d...", id, len(s.slots))
 		}
 	}
 	s.lock.Unlock()

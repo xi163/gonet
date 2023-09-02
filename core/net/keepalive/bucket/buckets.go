@@ -23,8 +23,6 @@ type Buckets interface {
 	Next() (pipe pipe.Pipe)
 	Start()
 	Stop()
-	Num() int
-	ResetNum()
 }
 
 type buckets struct {

@@ -21,7 +21,6 @@ import (
 // <summary>
 type Args struct {
 	using    bool
-	state    cc.AtomFlag
 	stopping cc.Singal
 	ticker   *time.Ticker
 	trigger  <-chan time.Time
@@ -34,7 +33,6 @@ type Args struct {
 func newArgs(proc run.Proc, size int32, d time.Duration, timerCb timer.TimerCallback) run.Args {
 	ticker, trigger := run.NewTicker(d)
 	s := &Args{
-		state:    cc.NewAtomFlag(),
 		stopping: cc.NewSingal(),
 		ticker:   ticker,
 		trigger:  trigger,
@@ -46,24 +44,12 @@ func newArgs(proc run.Proc, size int32, d time.Duration, timerCb timer.TimerCall
 	return s
 }
 
-func (s *Args) SetState(busy bool) {
-	if busy {
-		s.state.Set()
-	} else {
-		s.state.Reset()
-	}
-}
-
 func (s *Args) SetUsing(b bool) {
 	s.using = b
 }
 
 func (s *Args) GetUsing() bool {
 	return s.using
-}
-
-func (s *Args) Busing() bool {
-	return s.state.IsSet()
 }
 
 func (s *Args) Quit() bool {
@@ -80,7 +66,6 @@ func (s *Args) Reset(d time.Duration) {
 }
 
 func (s *Args) Add(args ...any) {
-
 }
 
 func (s *Args) SetTimerCallback(handler timer.TimerCallback) {

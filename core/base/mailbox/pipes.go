@@ -70,10 +70,9 @@ func (s *pipes) AddOne(d time.Duration, creator cell.WorkerCreator, size int) pi
 
 func (s *pipes) new_pipe(id int32, d time.Duration, creator cell.WorkerCreator) pipe.Pipe {
 	cpu := runtime.NumCPU()
-	cpu = 1
-	nonblock := true //非阻塞
-	tick := false    //开启tick检查
-	// d := time.Second //tick间隔时间
+	nonblock := true
+	tick := false
+	// d := time.Second
 	runner := workers.NewProcessor(tick, d, s.handler, s.onTimer, creator)
 	// runner := workers.NewProcessor(d, s.handler, nil, creator)
 	pipe := pipe.NewPipe(id, "worker.pipe", cpu, nonblock, runner)
@@ -81,7 +80,7 @@ func (s *pipes) new_pipe(id int32, d time.Duration, creator cell.WorkerCreator) 
 }
 
 func (s *pipes) New(v ...any) (q mq.Queue) {
-	if t, ok := ch.NewChan(v[0].(int), v[1].(int), v[2].(bool)).(mq.Queue); ok {
+	if t, ok := ch.NewChan(v[0].(int), v[1].(bool)).(mq.Queue); ok {
 		q = t
 		return
 	}

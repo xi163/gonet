@@ -19,8 +19,6 @@ type Args interface {
 	Duration() time.Duration
 	Reset(d time.Duration)
 	Add(args ...any)
-	SetState(busy bool)
-	Busing() bool
 	Quit() bool
 	Trigger() <-chan time.Time
 	TimerCallback() (handler timer.TimerCallback)
