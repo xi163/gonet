@@ -200,9 +200,7 @@ func (s *TCPConnection) SetDestroyCallback(cb func(v any)) {
 func (s *TCPConnection) ConnectEstablished(v ...any) {
 	s.wg.Add(1)
 	s.SetContext("ext", v)
-	// go s.readLoop()
-	// go s.writeLoop()
-	gopool2.Go(s.readLoop)
+	gopool2.Go(s.readLoop) //goroutine pool
 	gopool2.Go(s.writeLoop)
 }
 

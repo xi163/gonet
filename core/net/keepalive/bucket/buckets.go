@@ -5,7 +5,6 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/cwloo/gonet/core/base/cc"
 	"github.com/cwloo/gonet/core/base/pipe"
 	"github.com/cwloo/gonet/core/base/run"
 	"github.com/cwloo/gonet/core/base/run/timer_wheel"
@@ -27,17 +26,15 @@ type Buckets interface {
 
 type buckets struct {
 	p Pool
-	c cc.Counter
 }
 
 func NewBuckets(bucketsz int32, d time.Duration) Buckets {
 	if bucketsz <= 0 {
 		return &buckets{}
 	}
-	cpu := runtime.NumCPU() //pipe数量
-	//d := time.Second        //tick间隔时间
+	cpu := runtime.NumCPU()
+	//d := time.Second
 	s := &buckets{
-		c: cc.NewAtomCounter(),
 		p: NewPool("buckets.pool", bucketsz, d, int32(cpu)),
 	}
 	s.p.SetProcessor(cb.Processor(s.handler))
@@ -89,7 +86,6 @@ func (s *buckets) onTimer(timerID uint32, dt int32, args ...any) bool {
 }
 
 func (s *buckets) handler(msg any, args ...any) bool {
-	s.c.Up()
 	if len(args) < 1 {
 		panic(errors.New("args.size"))
 	}
@@ -135,22 +131,6 @@ func (s *buckets) handler(msg any, args ...any) bool {
 		data.Put()
 	}
 	return false
-}
-
-func (s *buckets) Num() int {
-	switch s.c {
-	case nil:
-		return 0
-	}
-	return s.c.Count()
-}
-
-func (s *buckets) ResetNum() {
-	switch s.c {
-	case nil:
-	default:
-		s.c.Reset()
-	}
 }
 
 func (s *buckets) Start() {

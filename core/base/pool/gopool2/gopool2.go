@@ -13,15 +13,15 @@ import (
 )
 
 var (
-	gos_obj = NewGos()
+	pool_ = NewGos()
 )
 
 func Go(f func()) {
-	gos_obj.Go(f)
+	pool_.Go(f)
 }
 
 func Put(pipe pipe.Pipe) {
-	gos_obj.Put(pipe)
+	pool_.Put(pipe)
 }
 
 type Gos interface {
