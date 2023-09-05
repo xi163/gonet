@@ -22,9 +22,7 @@ func After(d time.Duration, cb cb.Functor) {
 	timeouts.After(d, cb)
 }
 
-// <summary>
-// Timeout 定时任务池(单生产者，多消费者)
-// <summary>
+// 定时任务池(单生产者，多消费者)
 type Timeout interface {
 	After(d time.Duration, f cb.Functor)
 }

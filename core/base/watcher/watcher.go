@@ -7,9 +7,7 @@ import (
 	"github.com/cwloo/gonet/core/base/mq"
 )
 
-// <summary>
-// Watcher 监视器、看门狗
-// <summary>
+// 监视器、看门狗
 type Watcher interface {
 	Push(data any)
 	Start(handler func(v ...any) (exit bool))

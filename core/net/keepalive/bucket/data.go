@@ -21,9 +21,7 @@ const (
 	Update
 )
 
-// <summary>
-// Data 定时轮盘桶节点，处理空闲会话
-// <summary>
+// 定时轮盘桶节点，处理空闲会话
 type Data interface {
 	OpType() OpType
 	Cb() func(args ...any)

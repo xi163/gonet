@@ -7,9 +7,7 @@ import (
 	"github.com/cwloo/gonet/core/net/conn"
 )
 
-// <summary>
-// TCPClient TCP客户端
-// <summary>
+// TCP客户端
 type TCPClient interface {
 	Name() string
 	Peers() conn.Sessions

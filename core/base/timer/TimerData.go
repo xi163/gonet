@@ -23,9 +23,7 @@ const (
 	RemoveTimers
 )
 
-// <summary>
-// Data 定时器节点数据
-// <summary>
+// 定时器节点数据
 type Data interface {
 	OpType() OpType
 	TimerId() uint32

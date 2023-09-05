@@ -5,9 +5,7 @@ import (
 	"strings"
 )
 
-// <summary>
-// Address 网络地址结构
-// <summary>
+// 网络地址结构
 type Address struct {
 	Proto string //ws/wss/tcp
 	Addr  string //ip:port localhost:port

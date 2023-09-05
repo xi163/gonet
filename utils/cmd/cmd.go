@@ -1,8 +1,6 @@
 package cmd
 
-// <summary>
 // Cmd
-// <summary>
 type Cmd interface {
 	InitArgs(cb func(*ARG))
 	SetConf(name string)
@@ -28,9 +26,6 @@ type Cmd interface {
 	FormatPatternArg(key, val string) string
 }
 
-// <summary>
-// CMD
-// <summary>
 type CMD struct {
 	arg *ARG
 }

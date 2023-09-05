@@ -31,9 +31,7 @@ var (
 	}
 )
 
-// <summary>
-// TCPConnection TCP连接会话
-// <summary>
+// TCP连接会话
 type TCPConnection struct {
 	id                int64
 	name              string
@@ -202,10 +200,10 @@ func (s *TCPConnection) ConnectEstablished(v ...any) {
 	s.SetContext("ext", v)
 	gopool.Go2(cb.NewFunctor00(func() {
 		s.readLoop()
-	})) //goroutine pool
+	}))
 	gopool.Go2(cb.NewFunctor00(func() {
 		s.writeLoop()
-	})) //goroutine pool
+	}))
 }
 
 func (s *TCPConnection) connectEstablished(v ...any) {

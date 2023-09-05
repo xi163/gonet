@@ -31,17 +31,13 @@ func WaitAll() {
 	mgr.WaitAll()
 }
 
-// <summary>
 // Sub
-// <summary>
 type Sub struct {
 	p    *os.Process
 	args []any
 }
 
-// <summary>
 // manager
-// <summary>
 type manager interface {
 	Start(name string, args []string, succ func(int, ...any), cb func(*os.ProcessState, ...any), v ...any) (int, bool)
 	Range(cb func(int, ...any))
@@ -50,9 +46,7 @@ type manager interface {
 	WaitAll()
 }
 
-// <summary>
 // pid
-// <summary>
 type pid struct {
 	m  map[int]*Sub
 	l  *sync.RWMutex

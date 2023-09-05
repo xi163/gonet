@@ -13,9 +13,7 @@ var (
 	}
 )
 
-// <summary>
-// Expire 过期判断结构
-// <summary>
+// 过期判断结构
 type Expire interface {
 	StartTime() time.Time
 	Duration() time.Duration

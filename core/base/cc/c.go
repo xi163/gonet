@@ -1,8 +1,6 @@
 package cc
 
-// <summary>
-// Counter 锁计数器
-// <summary>
+// 锁计数器
 type Counter interface {
 	Up()
 	Down()

@@ -4,9 +4,7 @@ import (
 	"sync"
 )
 
-// <summary>
-// counter 普通锁计数器
-// <summary>
+// 普通锁计数器
 type counter struct {
 	c    int32
 	lock *sync.Mutex

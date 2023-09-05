@@ -19,9 +19,7 @@ import (
 	"github.com/cwloo/gonet/utils/safe"
 )
 
-// <summary>
-// Pipes 基于pipe的邮槽管理器接口/管道池(多生产者，多消费者)
-// <summary>
+// 基于pipe的邮槽管理器接口/管道池(多生产者，多消费者)
 type Pipes interface {
 	Add(d time.Duration, creator cell.WorkerCreator, size, num int)
 	AddOne(d time.Duration, creator cell.WorkerCreator, size int) pipe.Pipe

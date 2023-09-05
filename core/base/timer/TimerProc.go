@@ -1,8 +1,6 @@
 package timer
 
-// <summary>
-// Proc 定时器处理单元
-// <summary>
+// 定时器处理单元
 type Proc interface {
 	RunAfter(delay int32, args ...any) uint32
 	RunAfterWith(delay int32, handler TimerCallback, args ...any) uint32

@@ -16,9 +16,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// <summary>
-// Connector TCP连接器
-// <summary>
+// TCP连接器
 type Connector interface {
 	Reconnect()
 	Retry() bool
@@ -34,9 +32,6 @@ type Connector interface {
 	SetRetryInterval(d time.Duration)
 }
 
-// <summary>
-// Connector TCP连接器
-// <summary>
 type connector struct {
 	name, tmp       string
 	retry           bool

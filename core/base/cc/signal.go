@@ -2,11 +2,8 @@ package cc
 
 import "errors"
 
-// <summary>
-// Singal chan信号
-// <summary>
+// chan信号
 type Singal interface {
-	// 发送信号
 	Signal()
 	Signaled() (signal bool)
 	Read() <-chan bool
@@ -26,7 +23,6 @@ func NewSingal() *singal {
 	return s
 }
 
-// 发送信号
 func (s *singal) Signal() {
 	if !s.closed.IsSet() {
 		//chan满则阻塞等待

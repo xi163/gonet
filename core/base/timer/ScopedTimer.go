@@ -17,10 +17,9 @@ import (
 
 type TimerCallback func(timerID uint32, dt int32, args ...any) bool
 
-// <summary>
 // ScopedTimer 基于最小堆(最小生成树)实现的线程局部定时器
 // ScopedTimer 提供给线程内部使用，所以是安全的
-// <summary>
+
 type ScopedTimer interface {
 	// 定时器协程ID
 	ThreadID() int
@@ -42,9 +41,7 @@ type ScopedTimer interface {
 	Poll(tid int, update TimerCallback) bool
 }
 
-// <summary>
-// timerEvent 定时器事件
-// <summary>
+// 定时器事件
 type timerEvent struct {
 	// 定时器ID
 	timerID uint32
@@ -62,9 +59,7 @@ type timerEvent struct {
 	args []any
 }
 
-// <summary>
-// scopedTimer 基于最小堆(最小生成树)实现的定时器
-// <summary>
+// 基于最小堆(最小生成树)实现的定时器
 type scopedTimer struct {
 	x        uint32          // 用于自动生成timerID
 	tid      int             // 定时器所属goroutine

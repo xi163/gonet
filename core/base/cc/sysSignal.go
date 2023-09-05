@@ -6,9 +6,7 @@ import (
 	"sync"
 )
 
-// <summary>
-// SysSignal 系统中断信号
-// <summary>
+// 系统中断信号
 type SysSignal interface {
 	Start(handler func())
 	Wait()
@@ -16,9 +14,7 @@ type SysSignal interface {
 	Stop()
 }
 
-// <summary>
-// sysSignal 系统中断信号
-// <summary>
+// 系统中断信号
 type sysSignal struct {
 	watching bool
 	lock     *sync.Mutex

@@ -12,9 +12,7 @@ import (
 	"github.com/cwloo/gonet/utils/safe"
 )
 
-// <summary>
-// Gos2 go协程池(动态, 阻塞)
-// <summary>
+// go协程池
 type Gos2 interface {
 	Go2(f cb.Functor)
 	Len() (c int)

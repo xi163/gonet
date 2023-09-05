@@ -16,9 +16,7 @@ var (
 	}
 )
 
-// <summary>
-// Bucket 定时轮盘池，处理空闲会话(多生产者，多消费者)
-// <summary>
+// 定时轮盘池，处理空闲会话(多生产者，多消费者)
 type Buckets interface {
 	Push(peer conn.Session)
 	Update(peer conn.Session)

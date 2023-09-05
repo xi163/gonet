@@ -1,8 +1,6 @@
 package cb
 
-// <summary>
-// Proc 回调处理单元
-// <summary>
+// 回调处理单元
 type Proc interface {
 
 	// s.Exec(func(v any) {

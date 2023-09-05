@@ -20,9 +20,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// <summary>
-// Processor TCP客户端
-// <summary>
+// TCP客户端
 type Processor struct {
 	name            string
 	hold            conn.HoldType

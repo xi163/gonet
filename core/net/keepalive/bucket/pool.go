@@ -12,9 +12,7 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 )
 
-// <summary>
-// Pool 定时轮盘池，处理空闲会话(多生产者，多消费者)
-// <summary>
+// 定时轮盘池，处理空闲会话(多生产者，多消费者)
 type Pool interface {
 	D() time.Duration
 	Bucketsz() int32

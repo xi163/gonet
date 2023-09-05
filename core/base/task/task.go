@@ -16,9 +16,7 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 )
 
-// <summary>
-// Task 任务池(单生产者，多消费者)
-// <summary>
+// 任务池(单生产者，多消费者)
 type Task interface {
 	Fixed() bool
 	Nonblock() bool

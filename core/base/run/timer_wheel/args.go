@@ -9,16 +9,7 @@ import (
 	"github.com/cwloo/gonet/utils/timerwheel"
 )
 
-// RunAfter(delay int32, args ...any) uint32
-// RunAfterWith(delay int32, handler timer.TimerCallback, args ...any) uint32
-// RunEvery(delay, interval int32, args ...any) uint32
-// RunEveryWith(delay, interval int32, handler timer.TimerCallback, args ...any) uint32
-// RemoveTimer(timerID uint32)
-// RemoveTimers()
-
-// <summary>
-// Args 协程启动参数
-// <summary>
+// 协程启动参数
 type Args struct {
 	using    bool
 	stopping cc.Singal

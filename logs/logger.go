@@ -32,9 +32,7 @@ var (
 	bio  = 0
 )
 
-// <summary>
-// Logger 异步日志系统
-// <summary>
+// 异步日志系统
 type Logger interface {
 	SetPrename(name string)
 	GetPrename() string
@@ -60,9 +58,8 @@ type Logger interface {
 	ResetNum()
 }
 
-// <summary>
 // logger 异步日志系统
-// <summary>
+
 type logger struct {
 	utcOk   bool
 	mkdir   bool

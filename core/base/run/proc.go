@@ -12,9 +12,7 @@ import (
 	"github.com/cwloo/gonet/utils/gid"
 )
 
-// <summary>
-// Proc 处理单元
-// <summary>
+// 处理单元
 type Proc interface {
 	cb.Proc
 	timer.Proc

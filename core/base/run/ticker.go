@@ -21,9 +21,7 @@ func NewTicker(d time.Duration) (ticker *time.Ticker, trigger <-chan time.Time) 
 	return
 }
 
-// <summary>
-// Trigger 定时器触发器
-// <summary>
+// 定时器触发器
 type Trigger interface {
 	Trigger() <-chan time.Time
 	Stop()

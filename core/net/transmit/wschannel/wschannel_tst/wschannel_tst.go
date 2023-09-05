@@ -9,9 +9,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// <summary>
-// WSChannel websocket协议读写解析
-// <summary>
+// websocket协议读写解析
 type WSChannel struct {
 }
 

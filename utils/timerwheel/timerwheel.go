@@ -7,9 +7,7 @@ import (
 	"github.com/cwloo/gonet/utils/gid"
 )
 
-// <summary>
-// TimerWheel 时间轮盘，处理空闲超时连接
-// <summary>
+// 时间轮盘，处理空闲超时连接
 type TimerWheel interface {
 	PopBucket(interval int32) (v []any)
 	PushBucket(val any, timeout int32) int32

@@ -8,28 +8,17 @@ import (
 	"github.com/cwloo/gonet/core/base/cc"
 )
 
-// <summary>
-// Slot 邮槽
-// <summary>
+// 邮槽
 type Slot interface {
-	//返回ID
 	ID() int32
 	Name() string
-	//不活跃了
 	Dead() bool
-	// 滴答时钟间隔
 	Duration() time.Duration
-	// 修改时钟间隔
 	Reset(d time.Duration)
-	// 添加worker初始化参数
 	Add(args ...any)
-	// 启动协程并返回Proc句柄
 	Sched(r Processor) Proc
-	// 获取Proc句柄
 	Proc() Proc
-	// 等待退出
 	Wait()
-	// 退出处理
 	Stop()
 }
 

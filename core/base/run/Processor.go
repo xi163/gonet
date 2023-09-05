@@ -18,9 +18,7 @@ type GcCondition func(r Processor, args Args) (int, bool)
 
 type Overload func(r Processor) (int, bool)
 
-// <summary>
-// Processor 执行消息队列
-// <summary>
+// 执行消息队列
 type Processor interface {
 	Name() string
 	Queue() mq.Queue

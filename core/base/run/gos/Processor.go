@@ -11,9 +11,7 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 )
 
-// <summary>
-// Processor 执行消息队列
-// <summary>
+// 执行消息队列
 type Processor struct {
 	run.Processor
 	mq      ch.Queue

@@ -8,9 +8,7 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 )
 
-// <summary>
-// slice 非阻塞队列
-// <summary>
+// slice非阻塞队列
 type slice struct {
 	lock  *sync.Mutex
 	slice []any

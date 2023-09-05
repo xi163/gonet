@@ -7,9 +7,8 @@ import (
 	"github.com/cwloo/gonet/logs"
 )
 
-// <summary>
+
 // [session]=conn
-// <summary>
 type SessionToConn struct {
 	l *sync.RWMutex
 	m map[string]conn.Session
@@ -93,9 +92,8 @@ func (s *SessionToConn) Range(cb func(string, conn.Session)) {
 	s.l.RUnlock()
 }
 
-// <summary>
+
 // [platformid][session]=conn
-// <summary>
 type PlatformToSessions struct {
 	l *sync.RWMutex
 	m map[int]*SessionToConn
@@ -179,9 +177,8 @@ func (s *PlatformToSessions) Range(cb func(int, *SessionToConn)) {
 	s.l.RUnlock()
 }
 
-// <summary>
+
 // [userid][platformid][session]=conn
-// <summary>
 type UserToPlatforms struct {
 	l *sync.RWMutex
 	m map[string]*PlatformToSessions

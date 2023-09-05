@@ -12,9 +12,7 @@ const (
 	KHold
 )
 
-// <summary>
-// Sessions 连接会话容器
-// <summary>
+// 连接会话容器
 type Sessions interface {
 	Get(id int64) Session
 	Count() int
@@ -26,9 +24,6 @@ type Sessions interface {
 	Stop()
 }
 
-// <summary>
-// sessions 连接会话容器
-// <summary>
 type sessions struct {
 	peers map[int64]Session
 	n     int

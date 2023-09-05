@@ -17,9 +17,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// <summary>
-// Acceptor TCP接受器
-// <summary>
+// TCP接受器
 type Acceptor interface {
 	Addr() *conn.Address
 	ListenTCP(address ...string)
@@ -35,9 +33,6 @@ type Acceptor interface {
 	SetReadBufferSize(readBufferSize int)
 }
 
-// <summary>
-// acceptor TCP接受器
-// <summary>
 type acceptor struct {
 	certfile, keyfile string
 	name              string

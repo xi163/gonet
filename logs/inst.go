@@ -72,9 +72,7 @@ func Close() {
 	inst.Close()
 }
 
-// <summary>
 // F_DETAIL/F_TMSTMP/F_FN/F_TMSTMP_FN/F_FL/F_TMSTMP_FL/F_FL_FN/F_TMSTMP_FL_FN/F_TEXT/F_PURE
-// <summary>
 func Fatalf(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, inst.GetStyle()|F_SYNC, 4, format, v...)
@@ -102,9 +100,7 @@ func Debugf(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", inst.GetStyle(), 4, format, v...)
 }
 
-// <summary>
 // F_DETAIL
-// <summary>
 func FatalfD(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_DETAIL_SYNC, 4, format, v...)
@@ -132,9 +128,7 @@ func DebugfD(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_DETAIL, 4, format, v...)
 }
 
-// <summary>
 // F_TMSTMP
-// <summary>
 func FatalfT(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_TMSTMP_SYNC, 4, format, v...)
@@ -162,9 +156,7 @@ func DebugfT(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_TMSTMP, 4, format, v...)
 }
 
-// <summary>
 // F_FN
-// <summary>
 func FatalfF(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_FN_SYNC, 4, format, v...)
@@ -192,9 +184,7 @@ func DebugfF(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_FN, 4, format, v...)
 }
 
-// <summary>
 // F_TMSTMP_FN
-// <summary>
 func FatalfTF(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_TMSTMP_FN_SYNC, 4, format, v...)
@@ -222,9 +212,7 @@ func DebugfTF(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_TMSTMP_FN, 4, format, v...)
 }
 
-// <summary>
 // F_FL
-// <summary>
 func FatalfL(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_FL_SYNC, 4, format, v...)
@@ -252,9 +240,7 @@ func DebugfL(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_FL, 4, format, v...)
 }
 
-// <summary>
 // F_TMSTMP_FL
-// <summary>
 func FatalfTL(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_TMSTMP_FL_SYNC, 4, format, v...)
@@ -282,9 +268,7 @@ func DebugfTL(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_TMSTMP_FL, 4, format, v...)
 }
 
-// <summary>
 // F_FL_FN
-// <summary>
 func FatalfLF(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_FL_FN_SYNC, 4, format, v...)
@@ -312,9 +296,7 @@ func DebugfLF(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_FL_FN, 4, format, v...)
 }
 
-// <summary>
 // F_TMSTMP_FL_FN
-// <summary>
 func FatalfTLF(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_TMSTMP_FL_FN_SYNC, 4, format, v...)
@@ -342,9 +324,7 @@ func DebugfTLF(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_TMSTMP_FL_FN, 4, format, v...)
 }
 
-// <summary>
 // F_TEXT
-// <summary>
 func FatalfTT(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_TEXT_SYNC, 4, format, v...)
@@ -372,9 +352,7 @@ func DebugfTT(format string, v ...any) {
 	inst.Write(LVL_DEBUG, "", F_TEXT, 4, format, v...)
 }
 
-// <summary>
 // F_PURE
-// <summary>
 func FatalfP(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(LVL_FATAL, stack, F_PURE_SYNC, 4, format, v...)

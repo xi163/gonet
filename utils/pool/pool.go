@@ -8,9 +8,7 @@ import (
 	"github.com/cwloo/gonet/logs"
 )
 
-// <summary>
 // Pool
-// <summary>
 type Pool struct {
 	vec *list.List
 	new func(func(error, ...any), ...any) (any, error)

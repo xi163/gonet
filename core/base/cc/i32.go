@@ -2,9 +2,7 @@ package cc
 
 import "sync/atomic"
 
-// <summary>
-// I32 32位ID生成器
-// <summary>
+// 32位ID生成器
 type I32 interface {
 	New() int32
 }

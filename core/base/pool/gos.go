@@ -12,9 +12,7 @@ import (
 	"github.com/cwloo/gonet/utils/safe"
 )
 
-// <summary>
-// Gos go协程池(动态, 非阻塞)
-// <summary>
+// go协程池(动态, 非阻塞)
 type Gos interface {
 	Start()
 	Stop()

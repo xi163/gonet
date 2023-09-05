@@ -4,9 +4,7 @@ import (
 	"sync/atomic"
 )
 
-// <summary>
-// AtomFlag 原子操作
-// <summary>
+// 原子操作
 type AtomFlag interface {
 	Set()
 	Reset()

@@ -1,8 +1,6 @@
 package user_context
 
-// <summary>
 // Ctx
-// <summary>
 type Ctx interface {
 	SetContext(any any)
 	GetContext() any
@@ -16,9 +14,7 @@ type Ctx interface {
 	GetSession() string
 }
 
-// <summary>
 // context
-// <summary>
 type context struct {
 	userId     string
 	platformId int

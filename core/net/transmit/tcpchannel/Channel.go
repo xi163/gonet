@@ -10,9 +10,7 @@ import (
 	"net"
 )
 
-// <summary>
-// Channel TCP协议读写解析
-// <summary>
+// TCP协议读写解析
 type Channel struct {
 }
 

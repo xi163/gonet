@@ -9,9 +9,7 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 )
 
-// <summary>
-// Chan 消息队列
-// <summary>
+// chan消息队列
 type Chan struct {
 	nonblock bool
 	size     int32

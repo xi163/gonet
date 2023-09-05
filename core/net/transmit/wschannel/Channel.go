@@ -11,9 +11,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// <summary>
-// Channel websocket协议读写解析
-// <summary>
+// websocket协议读写解析
 type Channel struct {
 }
 

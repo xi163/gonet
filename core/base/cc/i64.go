@@ -2,9 +2,7 @@ package cc
 
 import "sync/atomic"
 
-// <summary>
-// I64 64位ID生成器
-// <summary>
+// 64位ID生成器
 type I64 interface {
 	New() int64
 }

@@ -13,9 +13,7 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 )
 
-// <summary>
-// Pipe 管道(单生产者，单消费者)
-// <summary>
+// 管道(单生产者，单消费者)
 type Pipe interface {
 	ID() int32
 	Name() string

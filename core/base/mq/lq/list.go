@@ -8,9 +8,7 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 )
 
-// <summary>
-// list 非阻塞队列
-// <summary>
+// list非阻塞队列
 type List struct {
 	lock *sync.Mutex
 	list *list.List

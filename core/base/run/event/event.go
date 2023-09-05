@@ -51,9 +51,7 @@ const (
 	EVTCustom                //自定义事件
 )
 
-// <summary>
-// Data 事件数据
-// <summary>
+// 事件数据
 type Data struct {
 	Event  Type
 	Object any
@@ -72,9 +70,7 @@ func (s *Data) Put() {
 	dataPool.Put(s)
 }
 
-// <summary>
-// Connected 建立连接事件
-// <summary>
+// 建立连接事件
 type Connected struct {
 	Peer    conn.Session
 	Handler cb.OnConnected
@@ -100,9 +96,7 @@ func CreateConnectedWith(handler cb.OnConnected, peer conn.Session, v ...any) *C
 	return s
 }
 
-// <summary>
-// Closing 通知关闭事件
-// <summary>
+// 通知关闭事件
 type Closing struct {
 	D    time.Duration
 	Peer conn.Session
@@ -119,9 +113,7 @@ func CreateClosing(d time.Duration, peer conn.Session) *Closing {
 	return s
 }
 
-// <summary>
-// Closed 响应断开事件
-// <summary>
+// 响应断开事件
 type Closed struct {
 	Peer    conn.Session
 	Reason  conn.Reason
@@ -150,9 +142,7 @@ func CreateClosedWith(handler cb.OnClosed, peer conn.Session, reason conn.Reason
 	return s
 }
 
-// <summary>
-// Read 网络读取事件
-// <summary>
+// 网络读取事件
 type Read struct {
 	Cmd     uint32
 	Peer    conn.Session
@@ -181,9 +171,7 @@ func CreateReadWith(handler cb.ReadCallback, cmd uint32, msg any, peer conn.Sess
 	return s
 }
 
-// <summary>
-// Custom 自定义事件
-// <summary>
+// 自定义事件
 type Custom struct {
 	Cmd     uint32
 	Peer    conn.Session

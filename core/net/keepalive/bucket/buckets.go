@@ -13,9 +13,7 @@ import (
 	"github.com/cwloo/gonet/core/net/conn"
 )
 
-// <summary>
-// Buckets 定时轮盘池，处理空闲会话(多生产者，多消费者)
-// <summary>
+// 定时轮盘池，处理空闲会话(多生产者，多消费者)
 type Buckets interface {
 	Size() int32
 	Interval() int32

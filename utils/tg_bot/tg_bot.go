@@ -13,9 +13,7 @@ var (
 	tgBot *TgBotApi
 )
 
-// <summary>
 // TgBotApi
-// <summary>
 type TgBotApi struct {
 	TgBot_Token  string
 	TgBot_ChatId int64

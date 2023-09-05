@@ -8,9 +8,7 @@ import (
 	"github.com/cwloo/gonet/core/base/timer"
 )
 
-// <summary>
-// Args 协程启动参数
-// <summary>
+// 协程启动参数
 type Args struct {
 	stopping cc.Singal
 }

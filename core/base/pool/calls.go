@@ -12,9 +12,7 @@ import (
 	"github.com/cwloo/gonet/utils/safe"
 )
 
-// <summary>
-// Calls 回调池(固定, 非阻塞)
-// <summary>
+// 回调池(固定, 非阻塞)
 type Calls interface {
 	Start()
 	Stop()

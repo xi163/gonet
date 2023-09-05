@@ -7,9 +7,7 @@ import (
 	"github.com/cwloo/gonet/core/net/conn"
 )
 
-// <summary>
-// Proc 事件处理单元
-// <summary>
+// 事件处理单元
 type Proc interface {
 	Post(data *Data)
 	PostConnected(peer conn.Session, v ...any)

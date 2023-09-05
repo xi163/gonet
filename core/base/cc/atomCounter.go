@@ -5,9 +5,7 @@ import (
 	"sync/atomic"
 )
 
-// <summary>
-// atomCounter 原子锁计数器
-// <summary>
+// 原子锁计数器
 type atomCounter struct {
 	c    int32
 	lock *sync.Mutex

@@ -20,9 +20,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// <summary>
-// Processor TCP服务端
-// <summary>
+// TCP服务端
 type Processor struct {
 	name            string
 	numConnected    int32

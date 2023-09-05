@@ -12,9 +12,7 @@ import (
 	"github.com/cwloo/gonet/utils/safe"
 )
 
-// <summary>
-// Conns 连接池(固定, 阻塞)
-// <summary>
+// 连接池(固定, 阻塞)
 type Conns interface {
 	Start()
 	Stop()

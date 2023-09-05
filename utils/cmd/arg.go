@@ -11,9 +11,7 @@ import (
 	"github.com/cwloo/gonet/utils/env"
 )
 
-// <summary>
 // ARG
-// <summary>
 type ARG struct {
 	conf struct {
 		dir  string

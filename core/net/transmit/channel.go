@@ -5,9 +5,7 @@ import (
 	"net"
 )
 
-// <summary>
-// Channel 消息传输接口(流协议读写解析)
-// <summary>
+// 消息传输接口(流协议读写解析)
 type Channel interface {
 	// 接收数据
 	OnRecv(conn any) (any, error)

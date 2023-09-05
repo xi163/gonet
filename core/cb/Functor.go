@@ -39,9 +39,7 @@ var (
 	}
 )
 
-// <summary>
-// Functor 回调函数
-// <summary>
+// 回调函数
 type Functor interface {
 	Call() (any, error)
 	CallWith(expire cc.Expire) (any, error)

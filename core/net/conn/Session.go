@@ -41,9 +41,7 @@ const (
 	KServer Type = Type(1)
 )
 
-// <summary>
-// Session 连接会话
-// <summary>
+// 连接会话
 type Session interface {
 	ID() int64
 	Name() string

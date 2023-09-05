@@ -15,9 +15,7 @@ var (
 	}
 )
 
-// <summary>
-// Timeout 超时请求结构
-// <summary>
+// 超时请求结构
 type Timeout interface {
 	Data() any
 	Expire() cc.Expire

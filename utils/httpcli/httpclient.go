@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/cookiejar"
 	"time"
@@ -99,7 +99,7 @@ func get(url string, c *http.Client) ([]byte, error) {
 		return nil, err
 	}
 	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	body, err := io.ReadAll(rsp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func do(req *http.Request, c *http.Client) ([]byte, error) {
 		return nil, err
 	}
 	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	body, err := io.ReadAll(rsp.Body)
 	if err != nil {
 		return nil, err
 	}

@@ -8,16 +8,7 @@ import (
 	"github.com/cwloo/gonet/core/base/timer"
 )
 
-// RunAfter(delay int32, args ...any) uint32
-// RunAfterWith(delay int32, handler timer.TimerCallback, args ...any) uint32
-// RunEvery(delay, interval int32, args ...any) uint32
-// RunEveryWith(delay, interval int32, handler timer.TimerCallback, args ...any) uint32
-// RemoveTimer(timerID uint32)
-// RemoveTimers()
-
-// <summary>
-// Args 协程启动参数
-// <summary>
+// 协程启动参数
 type Args struct {
 	stopping cc.Singal
 	ticker   *time.Ticker

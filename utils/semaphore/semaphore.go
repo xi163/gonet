@@ -2,9 +2,7 @@ package semaphore
 
 import "sync"
 
-/// <summary>
-/// 互斥访问控制
-/// <summary>
+// 互斥访问控制
 type Sem struct {
 	w     *sync.Mutex
 	l     *sync.Mutex

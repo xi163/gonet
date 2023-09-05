@@ -8,9 +8,7 @@ import (
 	"github.com/cwloo/gonet/core/cb"
 )
 
-// <summary>
-// queue slice阻塞队列
-// <summary>
+// slice阻塞队列
 type queue struct {
 	lock  *sync.Mutex
 	cond  *sync.Cond
