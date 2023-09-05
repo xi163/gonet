@@ -36,7 +36,7 @@ func (s *gos2) Go2(f cb.Functor) {
 	p.Do(cb.NewFunctor10(func(args any) {
 		safe.Call2(f.Call)
 		f.Put()
-		s.Put(args.(pipe.Pipe))
+		s.pool.Put(args)
 	}, p))
 }
 

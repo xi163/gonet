@@ -189,7 +189,7 @@ func (s *acceptor) accept() {
 	for !s.is_stopping() {
 		c, err := s.listener.Accept()
 		if err != nil {
-			if ne, ok := err.(net.Error); ok && ne.Temporary() {
+			if _, ok := err.(net.Error); ok /* && ne.Temporary()*/ {
 				if delay == 0 {
 					delay = 5 * time.Millisecond
 				} else {
