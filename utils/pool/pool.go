@@ -109,21 +109,46 @@ func (s *Pool) Reset(cb func(value any), direct bool) {
 func (s *Pool) onUpdate(err error, v ...any) {
 	switch err {
 	case nil:
-		logs.Errorf("%v ok", fmt.Sprintf("%v", v))
+		switch len(v) {
+		case 0:
+			logs.Errorf("ok")
+		default:
+			logs.Errorf("%v ok", fmt.Sprintf("%v", v))
+		}
 	default:
-		logs.Errorf("%v %v", fmt.Sprintf("%v", v), err.Error())
+		switch len(v) {
+		case 0:
+			logs.Errorf("%v", err.Error())
+		default:
+			logs.Errorf("%v %v", fmt.Sprintf("%v", v), err.Error())
+		}
 	}
 }
 
 func (s *Pool) onNew(err error, v ...any) {
 	switch err {
 	case nil:
-		// logs.Debugf("%v ok len=%v", fmt.Sprintf("%v", v), s.Len())
+		switch len(v) {
+		case 0:
+			logs.Debugf("ok len=%v", s.Len())
+		default:
+			logs.Debugf("%v ok len=%v", fmt.Sprintf("%v", v), s.Len())
+		}
 	default:
-		// logs.Errorf("%v %v", fmt.Sprintf("%v", v), err.Error())
+		switch len(v) {
+		case 0:
+			logs.Errorf("%v", err.Error())
+		default:
+			logs.Errorf("%v %v", fmt.Sprintf("%v", v), err.Error())
+		}
 	}
 }
 
-func (s *Pool) onGet(len int, v ...any) {
-	// logs.Errorf("%v ok len=%v", fmt.Sprintf("%v", v), len)
+func (s *Pool) onGet(length int, v ...any) {
+	switch len(v) {
+	case 0:
+		logs.Errorf("ok len=%v", length)
+	default:
+		logs.Errorf("%v ok len=%v", fmt.Sprintf("%v", v), length)
+	}
 }

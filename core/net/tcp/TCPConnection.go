@@ -10,7 +10,7 @@ import (
 	"github.com/cwloo/gonet/core/base/cc"
 	"github.com/cwloo/gonet/core/base/mq"
 	"github.com/cwloo/gonet/core/base/mq/lq"
-	"github.com/cwloo/gonet/core/base/pool/gopool2"
+	"github.com/cwloo/gonet/core/base/pool/gopool"
 	"github.com/cwloo/gonet/core/base/task"
 	"github.com/cwloo/gonet/core/cb"
 	"github.com/cwloo/gonet/core/net/conn"
@@ -200,8 +200,12 @@ func (s *TCPConnection) SetDestroyCallback(cb func(v any)) {
 func (s *TCPConnection) ConnectEstablished(v ...any) {
 	s.wg.Add(1)
 	s.SetContext("ext", v)
-	gopool2.Go(s.readLoop) //goroutine pool
-	gopool2.Go(s.writeLoop)
+	gopool.Go2(cb.NewFunctor00(func() {
+		s.readLoop()
+	})) //goroutine pool
+	gopool.Go2(cb.NewFunctor00(func() {
+		s.writeLoop()
+	})) //goroutine pool
 }
 
 func (s *TCPConnection) connectEstablished(v ...any) {

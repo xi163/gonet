@@ -130,8 +130,6 @@ func (s *Processor) Run(proc run.Proc) {
 		panic(errors.New("error: workers.Processor.worker is nil"))
 	}
 	timercb := proc.Args().(*Args).TimerCallback()
-	// s.counter.Up()
-	// s.idleCounter.Up()
 	worker.OnInit()
 	arg := proc.Args().(*Args)
 	s.startTicker(proc.Args(), proc.Args())
@@ -194,13 +192,9 @@ EXIT:
 			}
 		// case <-tickerTimeout.Trigger():
 		// 	if timercb == nil {
-		// 		s.begin(arg)
 		// 		timeout.Poll(proc.Tid(), worker.OnTimer)
-		// 		s.end(arg)
 		// 	} else {
-		// 		s.begin(arg)
 		// 		timeout.Poll(proc.Tid(), timercb)
-		// 		s.end(arg)
 		// 	}
 		case <-tickerGC.Trigger():
 			// if s.Gc(proc.Args()) {
@@ -243,41 +237,13 @@ func (s *Processor) trace(name string, flag run.EndType) {
 	}
 }
 
-// func (s *Processor) IdleUp() {
-// 	s.idleCounter.Up()
-// }
-
-// func (s *Processor) IdleDown() {
-// 	s.idleCounter.Down()
-// }
-
-// func (s *Processor) begin(arg run.Args) {
-// 	arg.SetState(true)
-// 	// s.idleCounter.Down()
-// }
-
-// func (s *Processor) end(arg run.Args) {
-// 	arg.SetState(false)
-// 	s.idleCounter.Up()
-// }
-
 func (s *Processor) flush(arg run.Args, v ...any) {
-	// s.begin(arg)
 	//if s.counter.Count() > 1 {
 	//	SafeCall(s.mq.Exec, true, s.handler, v...)
 	//} else {
 	SafeCall(s.mq.Exec, false, s.handler, v...)
 	//}
-	// s.end(arg)
 }
-
-// func (s *Processor) Count() int {
-// 	return s.counter.Count()
-// }
-
-// func (s *Processor) IdleCount() int {
-// 	return s.idleCounter.Count()
-// }
 
 func (s *Processor) Wait() {
 	// s.counter.Wait()
