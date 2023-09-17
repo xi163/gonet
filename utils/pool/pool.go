@@ -128,16 +128,16 @@ func (s *Pool) onNew(err error, v ...any) {
 	case nil:
 		switch len(v) {
 		case 0:
-			logs.Debugf("ok len=%v", s.Len())
+			// logs.Debugf("ok len=%v", s.Len())
 		default:
-			logs.Debugf("%v ok len=%v", fmt.Sprintf("%v", v), s.Len())
+			// logs.Debugf("%v ok len=%v", fmt.Sprintf("%v", v), s.Len())
 		}
 	default:
 		switch len(v) {
 		case 0:
-			logs.Errorf("%v", err.Error())
+			// logs.Errorf("%v", err.Error())
 		default:
-			logs.Errorf("%v %v", fmt.Sprintf("%v", v), err.Error())
+			// logs.Errorf("%v %v", fmt.Sprintf("%v", v), err.Error())
 		}
 	}
 }
@@ -145,8 +145,8 @@ func (s *Pool) onNew(err error, v ...any) {
 func (s *Pool) onGet(length int, v ...any) {
 	switch len(v) {
 	case 0:
-		logs.Errorf("ok len=%v", length)
+		// logs.Errorf("ok len=%v", length)
 	default:
-		logs.Errorf("%v ok len=%v", fmt.Sprintf("%v", v), length)
+		// logs.Errorf("%v ok len=%v", fmt.Sprintf("%v", v), length)
 	}
 }
