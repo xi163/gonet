@@ -778,8 +778,7 @@ func (s *logger) shift(tm *time.Time) {
 			if err != nil && os.IsNotExist(err) {
 				s.open(s.path)
 			} else {
-				i := 0
-				for {
+				for i := 0; ; {
 					s.path = strings.Join([]string{
 						s.prefix, strconv.Itoa(s.pid), "_", YMD, ".", HMS, ".", strconv.Itoa(i), ".log",
 					}, "")
