@@ -99,7 +99,7 @@ func (s *unsafeArg) styleString() string {
 	case F_PURE:
 		return "F_PURE"
 	default:
-		return "Style[unknow]"
+		return "F_UNKNOWN"
 	}
 }
 
