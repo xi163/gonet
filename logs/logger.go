@@ -54,8 +54,6 @@ type Logger interface {
 	Write(level Level, stack string, style Style, skip int, format string, v ...any)
 	Wait()
 	Close()
-	Num() int
-	ResetNum()
 }
 
 // logger 异步日志系统
@@ -74,7 +72,6 @@ type logger struct {
 	tm      time.Time
 	arg     *unsafeArg
 	pipe    pipe.Pipe
-	c       cc.Counter
 	l       *sync.RWMutex
 	bio     *bufio.Writer
 	l_sync  *sync.Mutex
@@ -88,7 +85,6 @@ func NewLogger() Logger {
 		utcOk:  true,
 		pid:    os.Getpid(),
 		arg:    newUnsafeArg(),
-		c:      cc.NewAtomCounter(),
 		l:      &sync.RWMutex{},
 		l_sync: &sync.Mutex{},
 		flag:   cc.NewAtomFlag()}
@@ -828,7 +824,6 @@ func getlevel(c byte) Level {
 }
 
 func (s *logger) handler(msg any, args ...any) (exit bool) {
-	// s.c.Up()
 	switch msg := msg.(type) {
 	case *MessageT:
 		// messageT, _ := msg.(*MessageT)
@@ -1002,12 +997,4 @@ func (s *logger) wait_started() {
 // reset
 func (s *logger) reset() {
 	s.pipe = nil
-}
-
-func (s *logger) Num() int {
-	return s.c.Count()
-}
-
-func (s *logger) ResetNum() {
-	s.c.Reset()
 }
