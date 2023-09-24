@@ -51,7 +51,7 @@ type Logger interface {
 	SetColor(level Level, prefix, context int)
 	Init(dir string, prename string, logsize int64)
 	Sprint(level Level, style Style, skip int, format string, v ...any) (string, string)
-	Write(level Level, stack string, style Style, skip int, format string, v ...any)
+	Write(stack string, level Level, style Style, skip int, format string, v ...any)
 	Wait()
 	Close()
 }
@@ -726,7 +726,7 @@ func (s *logger) Sprint(level Level, style Style, skip int, format string, v ...
 }
 
 // Write
-func (s *logger) Write(level Level, stack string, style Style, skip int, format string, v ...any) {
+func (s *logger) Write(stack string, level Level, style Style, skip int, format string, v ...any) {
 	if s.check(level) {
 		prefix, content := s.Sprint(level, style, skip, format, v...)
 		s.push(prefix, content+"\n", len(prefix), style, stack)
@@ -864,7 +864,7 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 			}
 			switch mode {
 			case M_STDOUT_ONLY, M_STDOUT_FILE:
-				s.stdoutbuf(level, msgData, pos, style, stack)
+				s.stdoutbuf(msgData, pos, level, style, stack)
 			}
 		case LVL_ERROR, LVL_WARN, LVL_INFO, LVL_TRACE, LVL_DEBUG:
 			switch mode {
@@ -873,7 +873,7 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 			}
 			switch mode {
 			case M_STDOUT_ONLY, M_STDOUT_FILE:
-				s.stdoutbuf(level, msgData, pos, style, "")
+				s.stdoutbuf(msgData, pos, level, style, "")
 			}
 		}
 		msgData.Put()
@@ -885,7 +885,7 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 	return
 }
 
-func (s *logger) stdoutbuf(level Level, msg *Msg, pos int, style Style, stack string) {
+func (s *logger) stdoutbuf(msg *Msg, pos int, level Level, style Style, stack string) {
 	switch level {
 	case LVL_FATAL:
 		switch style {
