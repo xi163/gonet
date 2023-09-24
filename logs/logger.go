@@ -308,7 +308,8 @@ func (s *logger) Wait() {
 
 // checkDir
 func (s *logger) checkDir() {
-	if !s.mkdir {
+	switch s.mkdir {
+	case false:
 		dir := filepath.Dir(s.prefix)
 		_, err := os.Stat(dir)
 		if err != nil && os.IsNotExist(err) {
@@ -836,7 +837,8 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 		stack := message.second
 		prefix := msgData.first
 		// content := msgData.second
-		switch s.arg.getMode() {
+		mode := s.arg.getMode()
+		switch mode {
 		case M_FILE_ONLY, M_STDOUT_FILE:
 			if s.prefix == "" {
 				break
@@ -849,7 +851,6 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 				s.shift(&tm)
 			}
 		}
-		mode := s.arg.getMode()
 		if mode > M_STDOUT_ONLY && (!s.mkdir || prefix[0] == TAG[1]) {
 			mode = M_STDOUT_ONLY
 		}
