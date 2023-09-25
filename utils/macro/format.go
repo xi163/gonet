@@ -33,7 +33,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 	dt := tm.Format("15:04:05.000000")
 	tid := gid.Getgid()
 	switch style {
-	case F_DETAIL, F_DETAIL_SYNC: //F_DETAIL
+	case F_DETAIL, F_DETAIL_SYNC:
 		//W101106 CST 21:17:00.024254 199 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -67,7 +67,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_TMSTMP, F_TMSTMP_SYNC: //F_TMSTMP
+	case F_TMSTMP, F_TMSTMP_SYNC:
 		//W101106 CST 21:17:00.024254] xxx
 		var b strings.Builder
 		switch ok {
@@ -88,7 +88,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		}
 		b.WriteString("] ")
 		prefix = b.String()
-	case F_FN, F_FN_SYNC: //F_FN
+	case F_FN, F_FN_SYNC:
 		//W101106][main] server.run xxx
 		pc, _, _, _ := runtime.Caller(skip)
 		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
@@ -108,7 +108,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC: //F_TMSTMP_FN
+	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC:
 		//W101106 CST 21:17:00.024254][main] server.run xxx
 		pc, _, _, _ := runtime.Caller(skip)
 		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
@@ -135,7 +135,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_FL, F_FL_SYNC: //F_FL
+	case F_FL, F_FL_SYNC:
 		//W101106 main.go:103] xxx
 		_, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -155,7 +155,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		b.WriteString(strconv.Itoa(line))
 		b.WriteString("] ")
 		prefix = b.String()
-	case F_TMSTMP_FL, F_TMSTMP_FL_SYNC: //F_TMSTMP_FL
+	case F_TMSTMP_FL, F_TMSTMP_FL_SYNC:
 		//W101106 CST 21:17:00.024254 main.go:103] xxx
 		_, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -182,7 +182,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		b.WriteString(strconv.Itoa(line))
 		b.WriteString("] ")
 		prefix = b.String()
-	case F_FL_FN, F_FL_FN_SYNC: //F_FL_FN
+	case F_FL_FN, F_FL_FN_SYNC:
 		//W101106 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -207,7 +207,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC: //F_TMSTMP_FL_FN
+	case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC:
 		//W101106 CST 21:17:00.024254 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -239,7 +239,7 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_TEXT, F_TEXT_SYNC: //F_TEXT
+	case F_TEXT, F_TEXT_SYNC:
 		//W101106] xxx
 		var b strings.Builder
 		switch ok {
@@ -253,7 +253,9 @@ func Format(ok bool, tm *time.Time, timezone Timezone, pid int, name func(bool) 
 		b.WriteString(name(false))
 		b.WriteString("] ")
 		prefix = b.String()
-	default: //F_PURE
+	case F_PURE, F_PURE_SYNC:
+		fallthrough
+	default:
 		//xxx
 		var b bytes.Buffer
 		switch ok {
