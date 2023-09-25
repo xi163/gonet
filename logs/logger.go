@@ -896,76 +896,80 @@ func (s *logger) stdoutbuf(msg *Msg, pos int, level Level, style Style, stack st
 	switch level {
 	case LVL_FATAL:
 		switch style {
-		case F_DETAIL, F_DETAIL_SYNC: //F_DETAIL
+		case F_DETAIL, F_DETAIL_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		case F_TMSTMP, F_TMSTMP_SYNC: //F_TMSTMP
+		case F_TMSTMP, F_TMSTMP_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		case F_FN, F_FN_SYNC: //F_FN
+		case F_FN, F_FN_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		case F_TMSTMP_FN, F_TMSTMP_FN_SYNC: //F_TMSTMP_FN
+		case F_TMSTMP_FN, F_TMSTMP_FN_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		case F_FL, F_FL_SYNC: //F_FL
+		case F_FL, F_FL_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		case F_TMSTMP_FL, F_TMSTMP_FL_SYNC: //F_TMSTMP_FL
+		case F_TMSTMP_FL, F_TMSTMP_FL_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		case F_FL_FN, F_FL_FN_SYNC: //F_FL_FN
+		case F_FL_FN, F_FL_FN_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC: //F_TMSTMP_FL_FN
+		case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		case F_TEXT, F_TEXT_SYNC: //F_TEXT
+		case F_TEXT, F_TEXT_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
 			Print(color[level][0], stack)
-		default: //F_PURE
+		case F_PURE, F_PURE_SYNC:
+			fallthrough
+		default:
 			Print(color[level][0], msg.second)
 			Print(color[level][0], stack)
 		}
 	case LVL_ERROR, LVL_WARN, LVL_INFO, LVL_TRACE, LVL_DEBUG:
 		switch style {
-		case F_DETAIL, F_DETAIL_SYNC: //F_DETAIL
+		case F_DETAIL, F_DETAIL_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		case F_TMSTMP, F_TMSTMP_SYNC: //F_TMSTMP
+		case F_TMSTMP, F_TMSTMP_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		case F_FN, F_FN_SYNC: //F_FN
+		case F_FN, F_FN_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		case F_TMSTMP_FN, F_TMSTMP_FN_SYNC: //F_TMSTMP_FN
+		case F_TMSTMP_FN, F_TMSTMP_FN_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		case F_FL, F_FL_SYNC: //F_FL
+		case F_FL, F_FL_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		case F_TMSTMP_FL, F_TMSTMP_FL_SYNC: //F_TMSTMP_FL
+		case F_TMSTMP_FL, F_TMSTMP_FL_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		case F_FL_FN, F_FL_FN_SYNC: //F_FL_FN
+		case F_FL_FN, F_FL_FN_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC: //F_TMSTMP_FL_FN
+		case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		case F_TEXT, F_TEXT_SYNC: //F_TEXT
+		case F_TEXT, F_TEXT_SYNC:
 			Print(color[level][0], msg.first[1:])
 			Print(color[level][1], msg.second)
-		default: //F_PURE
+		case F_PURE, F_PURE_SYNC:
+			fallthrough
+		default:
 			Print(color[level][0], msg.second)
 		}
 	}
