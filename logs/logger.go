@@ -366,7 +366,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 	dt := tm.Format("15:04:05.000000")
 	tid := gid.Getgid()
 	switch style {
-	case F_DETAIL, F_DETAIL_SYNC: //F_DETAIL
+	case F_DETAIL, F_DETAIL_SYNC:
 		//W101106 CST 21:17:00.024254 199 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -400,7 +400,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_TMSTMP, F_TMSTMP_SYNC: //F_TMSTMP
+	case F_TMSTMP, F_TMSTMP_SYNC:
 		//W101106 CST 21:17:00.024254] xxx
 		var b strings.Builder
 		switch ok {
@@ -421,7 +421,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		}
 		b.WriteString("] ")
 		prefix = b.String()
-	case F_FN, F_FN_SYNC: //F_FN
+	case F_FN, F_FN_SYNC:
 		//W101106][main] server.run xxx
 		pc, _, _, _ := runtime.Caller(skip)
 		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
@@ -441,7 +441,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC: //F_TMSTMP_FN
+	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC:
 		//W101106 CST 21:17:00.024254][main] server.run xxx
 		pc, _, _, _ := runtime.Caller(skip)
 		pg, fn := Fn.Split(runtime.FuncForPC(pc).Name())
@@ -468,7 +468,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_FL, F_FL_SYNC: //F_FL
+	case F_FL, F_FL_SYNC:
 		//W101106 main.go:103] xxx
 		_, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -488,7 +488,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(strconv.Itoa(line))
 		b.WriteString("] ")
 		prefix = b.String()
-	case F_TMSTMP_FL, F_TMSTMP_FL_SYNC: //F_TMSTMP_FL
+	case F_TMSTMP_FL, F_TMSTMP_FL_SYNC:
 		//W101106 CST 21:17:00.024254 main.go:103] xxx
 		_, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -515,7 +515,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(strconv.Itoa(line))
 		b.WriteString("] ")
 		prefix = b.String()
-	case F_FL_FN, F_FL_FN_SYNC: //F_FL_FN
+	case F_FL_FN, F_FL_FN_SYNC:
 		//W101106 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -540,7 +540,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC: //F_TMSTMP_FL_FN
+	case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC:
 		//W101106 CST 21:17:00.024254 main.go:103][main] server.run xxx
 		pc, f, line, _ := runtime.Caller(skip)
 		_, file := path.Split(f)
@@ -572,7 +572,7 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(fn)
 		b.WriteString(" ")
 		prefix = b.String()
-	case F_TEXT, F_TEXT_SYNC: //F_TEXT
+	case F_TEXT, F_TEXT_SYNC:
 		//W101106] xxx
 		var b strings.Builder
 		switch ok {
@@ -586,7 +586,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		b.WriteString(s.name(false))
 		b.WriteString("] ")
 		prefix = b.String()
-	default: //F_PURE
+	case F_PURE, F_PURE_SYNC:
+		fallthrough
+	default:
 		//xxx
 		var b bytes.Buffer
 		switch ok {
@@ -640,25 +642,27 @@ func (s *logger) writeStack(stack string) {
 // write
 func (s *logger) write(msg string, pos int, style Style) {
 	switch style {
-	case F_DETAIL, F_DETAIL_SYNC: //F_DETAIL
+	case F_DETAIL, F_DETAIL_SYNC:
 		s.write_(msg[1:])
-	case F_TMSTMP, F_TMSTMP_SYNC: //F_TMSTMP
+	case F_TMSTMP, F_TMSTMP_SYNC:
 		s.write_(msg[1:])
-	case F_FN, F_FN_SYNC: //F_FN
+	case F_FN, F_FN_SYNC:
 		s.write_(msg[1:])
-	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC: //F_TMSTMP_FN
+	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC:
 		s.write_(msg[1:])
-	case F_FL, F_FL_SYNC: //F_FL
+	case F_FL, F_FL_SYNC:
 		s.write_(msg[1:])
-	case F_TMSTMP_FL, F_TMSTMP_FL_SYNC: //F_TMSTMP_FL
+	case F_TMSTMP_FL, F_TMSTMP_FL_SYNC:
 		s.write_(msg[1:])
-	case F_FL_FN, F_FL_FN_SYNC: //F_FL_FN
+	case F_FL_FN, F_FL_FN_SYNC:
 		s.write_(msg[1:])
-	case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC: //F_TMSTMP_FL_FN
+	case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC:
 		s.write_(msg[1:])
-	case F_TEXT, F_TEXT_SYNC: //F_TEXT
+	case F_TEXT, F_TEXT_SYNC:
 		s.write_(msg[1:])
-	default: //F_PURE
+	case F_PURE, F_PURE_SYNC:
+		fallthrough
+	default:
 		s.write_(msg[2:])
 	}
 }
@@ -666,25 +670,27 @@ func (s *logger) write(msg string, pos int, style Style) {
 // write_bio
 func (s *logger) write_bio(msg string, pos int, style Style) {
 	switch style {
-	case F_DETAIL, F_DETAIL_SYNC: //F_DETAIL
+	case F_DETAIL, F_DETAIL_SYNC:
 		s.write_bio_(msg[1:])
-	case F_TMSTMP, F_TMSTMP_SYNC: //F_TMSTMP
+	case F_TMSTMP, F_TMSTMP_SYNC:
 		s.write_bio_(msg[1:])
-	case F_FN, F_FN_SYNC: //F_FN
+	case F_FN, F_FN_SYNC:
 		s.write_bio_(msg[1:])
-	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC: //F_TMSTMP_FN
+	case F_TMSTMP_FN, F_TMSTMP_FN_SYNC:
 		s.write_bio_(msg[1:])
-	case F_FL, F_FL_SYNC: //F_FL
+	case F_FL, F_FL_SYNC:
 		s.write_bio_(msg[1:])
-	case F_TMSTMP_FL, F_TMSTMP_FL_SYNC: //F_TMSTMP_FL
+	case F_TMSTMP_FL, F_TMSTMP_FL_SYNC:
 		s.write_bio_(msg[1:])
-	case F_FL_FN, F_FL_FN_SYNC: //F_FL_FN
+	case F_FL_FN, F_FL_FN_SYNC:
 		s.write_bio_(msg[1:])
-	case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC: //F_TMSTMP_FL_FN
+	case F_TMSTMP_FL_FN, F_TMSTMP_FL_FN_SYNC:
 		s.write_bio_(msg[1:])
-	case F_TEXT, F_TEXT_SYNC: //F_TEXT
+	case F_TEXT, F_TEXT_SYNC:
 		s.write_bio_(msg[1:])
-	default: //F_PURE
+	case F_PURE, F_PURE_SYNC:
+		fallthrough
+	default:
 		s.write_bio_(msg[2:])
 	}
 }
