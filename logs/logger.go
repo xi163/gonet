@@ -243,8 +243,8 @@ func (s *logger) SetColor(level Level, prefix, context int) {
 }
 
 // setting
-func (s *logger) setting(update bool) {
-	switch update {
+func (s *logger) setting(v bool) {
+	switch v {
 	case true:
 		t := time.Now()
 		var tm time.Time
