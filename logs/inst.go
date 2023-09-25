@@ -20,48 +20,48 @@ func TimezoneString() string {
 	return inst.TimezoneString()
 }
 
-func GetTimezone() Timezone {
-	return inst.GetTimezone()
-}
-
 func SetTimezone(timezone Timezone) {
 	inst.SetTimezone(timezone)
 }
 
-func ModeString() string {
-	return inst.ModeString()
-}
-
-func GetMode() Mode {
-	return inst.GetMode()
-}
-
-func SetMode(mode Mode) {
-	inst.SetMode(mode)
-}
-
-func StyleString() string {
-	return inst.StyleString()
-}
-
-func GetStyle() Style {
-	return inst.GetStyle()
-}
-
-func SetStyle(style Style) {
-	inst.SetStyle(style)
+func GetTimezone() Timezone {
+	return inst.GetTimezone()
 }
 
 func LevelString() string {
 	return inst.LevelString()
 }
 
+func SetLevel(level Level) {
+	inst.SetLevel(level)
+}
+
 func GetLevel() Level {
 	return inst.GetLevel()
 }
 
-func SetLevel(level Level) {
-	inst.SetLevel(level)
+func ModeString() string {
+	return inst.ModeString()
+}
+
+func SetMode(mode Mode) {
+	inst.SetMode(mode)
+}
+
+func GetMode() Mode {
+	return inst.GetMode()
+}
+
+func StyleString() string {
+	return inst.StyleString()
+}
+
+func SetStyle(style Style) {
+	inst.SetStyle(style)
+}
+
+func GetStyle() Style {
+	return inst.GetStyle()
 }
 
 func Init(dir string, prename string, logsize int64) {
