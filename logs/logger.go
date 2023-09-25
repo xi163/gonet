@@ -307,21 +307,26 @@ func (s *logger) Wait() {
 }
 
 // checkDir
-func (s *logger) checkDir() {
-	switch s.mkdir {
-	case false:
-		dir := filepath.Dir(s.prefix)
-		_, err := os.Stat(dir)
-		if err != nil && os.IsNotExist(err) {
-			err := os.MkdirAll(dir, 0777)
-			if err != nil {
-				panic(err.Error())
+func (s *logger) checkDir() bool {
+	switch s.prefix {
+	case "":
+	default:
+		switch s.mkdir {
+		case false:
+			dir := filepath.Dir(s.prefix)
+			_, err := os.Stat(dir)
+			if err != nil && os.IsNotExist(err) {
+				err := os.MkdirAll(dir, 0777)
+				if err != nil {
+					panic(err.Error())
+				}
+				s.mkdir = true
+			} else {
+				s.mkdir = true
 			}
-			s.mkdir = true
-		} else {
-			s.mkdir = true
 		}
 	}
+	return s.mkdir
 }
 
 // Init
@@ -334,10 +339,6 @@ func (s *logger) Init(dir string, prename string, logsize int64) {
 		s.prefix = dir + "/" + prename + "."
 	} else {
 		s.prefix = dir + "/"
-	}
-	switch s.arg.getMode() {
-	case M_FILE_ONLY, M_STDOUT_FILE:
-		s.checkDir()
 	}
 }
 
@@ -840,19 +841,19 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 		mode := s.arg.getMode()
 		switch mode {
 		case M_FILE_ONLY, M_STDOUT_FILE:
-			if s.prefix == "" {
-				break
-			}
 			switch prefix[0] {
 			case TAG[0]:
-				s.checkDir()
-				var tm time.Time
-				s.get(&tm)
-				s.shift(&tm)
+				switch s.checkDir() {
+				default:
+					mode = M_STDOUT_ONLY
+				case true:
+					var tm time.Time
+					s.get(&tm)
+					s.shift(&tm)
+				}
+			case TAG[1]:
+				mode = M_STDOUT_ONLY
 			}
-		}
-		if mode > M_STDOUT_ONLY && (!s.mkdir || prefix[0] == TAG[1]) {
-			mode = M_STDOUT_ONLY
 		}
 		level := getlevel(conv.StrToByte(prefix)[1])
 		switch level {
