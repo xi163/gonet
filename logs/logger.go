@@ -37,17 +37,17 @@ type Logger interface {
 	SetPrename(name string)
 	GetPrename() string
 	TimezoneString() string
-	GetTimezone() Timezone
 	SetTimezone(timezone Timezone)
-	ModeString() string
-	GetMode() Mode
-	SetMode(mode Mode)
-	StyleString() string
-	GetStyle() Style
-	SetStyle(style Style)
+	GetTimezone() Timezone
 	LevelString() string
-	GetLevel() Level
 	SetLevel(level Level)
+	GetLevel() Level
+	ModeString() string
+	SetMode(mode Mode)
+	GetMode() Mode
+	StyleString() string
+	SetStyle(style Style)
+	GetStyle() Style
 	SetColor(level Level, prefix, context int)
 	Init(dir string, prename string, logsize int64)
 	Sprint(level Level, style Style, skip int, format string, v ...any) (string, string)
@@ -108,11 +108,6 @@ func (s *logger) TimezoneString() string {
 	return s.arg.timezoneString()
 }
 
-// GetTimezone
-func (s *logger) GetTimezone() Timezone {
-	return s.arg.getTimezone()
-}
-
 // SetTimezone
 func (s *logger) SetTimezone(timezone Timezone) {
 	switch timezone == s.arg.getTimezone() {
@@ -126,14 +121,37 @@ func (s *logger) SetTimezone(timezone Timezone) {
 	}
 }
 
+// GetTimezone
+func (s *logger) GetTimezone() Timezone {
+	return s.arg.getTimezone()
+}
+
+// LevelString
+func (s *logger) LevelString() string {
+	return s.arg.levelString()
+}
+
+// SetLevel
+func (s *logger) SetLevel(level Level) {
+	switch level == s.arg.getLevel() {
+	case false:
+		switch s.arg.setLevel(level) {
+		case true:
+			s.setting(false)
+		default:
+			s.setting(false)
+		}
+	}
+}
+
+// GetLevel
+func (s *logger) GetLevel() Level {
+	return s.arg.getLevel()
+}
+
 // ModeString
 func (s *logger) ModeString() string {
 	return s.arg.modeString()
-}
-
-// GetMode
-func (s *logger) GetMode() Mode {
-	return s.arg.getMode()
 }
 
 // SetMode
@@ -149,14 +167,14 @@ func (s *logger) SetMode(mode Mode) {
 	}
 }
 
+// GetMode
+func (s *logger) GetMode() Mode {
+	return s.arg.getMode()
+}
+
 // StyleString
 func (s *logger) StyleString() string {
 	return s.arg.styleString()
-}
-
-// GetStyle
-func (s *logger) GetStyle() Style {
-	return s.arg.getStyle()
 }
 
 // SetStyle
@@ -172,27 +190,9 @@ func (s *logger) SetStyle(style Style) {
 	}
 }
 
-// LevelString
-func (s *logger) LevelString() string {
-	return s.arg.levelString()
-}
-
-// GetLevel
-func (s *logger) GetLevel() Level {
-	return s.arg.getLevel()
-}
-
-// SetLevel
-func (s *logger) SetLevel(level Level) {
-	switch level == s.arg.getLevel() {
-	case false:
-		switch s.arg.setLevel(level) {
-		case true:
-			s.setting(false)
-		default:
-			s.setting(false)
-		}
-	}
+// GetStyle
+func (s *logger) GetStyle() Style {
+	return s.arg.getStyle()
 }
 
 // check
