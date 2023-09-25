@@ -56,8 +56,6 @@ type Logger interface {
 	Close()
 }
 
-// logger 异步日志系统
-
 type logger struct {
 	utcOk   bool
 	mkdir   bool
