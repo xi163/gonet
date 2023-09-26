@@ -25,7 +25,7 @@ import (
 
 var (
 	i32  = cc.NewI32()
-	TAG  = []byte{'T', 'P'}
+	UTC  = []byte{'T', 'P'}
 	CHR  = []string{"F", "E", "W", "I", "T", "D"}
 	LVL  = []string{"FATAL", "ERROR", "WARNING", "INFO", "TRACE", "DEBUG"}
 	MODE = []string{"M_STDOUT_ONLY", "M_FILE_ONLY", "M_STDOUT_FILE"}
@@ -304,8 +304,8 @@ func (s *logger) Wait() {
 	s.l_sync.Unlock()
 }
 
-// checkDir
-func (s *logger) checkDir() bool {
+// mkDir
+func (s *logger) mkDir() bool {
 	switch s.mkdir {
 	case false:
 		switch s.prefix {
@@ -372,9 +372,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -403,9 +403,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -426,9 +426,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -446,9 +446,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -473,9 +473,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -493,9 +493,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -521,9 +521,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -546,9 +546,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -575,9 +575,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b strings.Builder
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(strconv.Itoa(s.pid))
@@ -591,9 +591,9 @@ func (s *logger) format(level Level, style Style, skip int) (prefix string) {
 		var b bytes.Buffer
 		switch ok {
 		case true:
-			b.WriteByte(TAG[0])
+			b.WriteByte(UTC[0])
 		default:
-			b.WriteByte(TAG[1])
+			b.WriteByte(UTC[1])
 		}
 		b.WriteString(CHR[level])
 		b.WriteString(s.name(true))
@@ -846,8 +846,8 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 		switch mode {
 		case M_FILE_ONLY, M_STDOUT_FILE:
 			switch prefix[0] {
-			case TAG[0]:
-				switch s.checkDir() {
+			case UTC[0]:
+				switch s.mkDir() {
 				default:
 					mode = M_STDOUT_ONLY
 				case true:
@@ -855,7 +855,7 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 					s.get(&tm)
 					s.shift(&tm)
 				}
-			case TAG[1]:
+			case UTC[1]:
 				mode = M_STDOUT_ONLY
 			}
 		}
@@ -863,22 +863,25 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 		switch level {
 		case LVL_FATAL:
 			switch mode {
-			case M_FILE_ONLY, M_STDOUT_FILE:
+			case M_STDOUT_ONLY:
+				s.stdoutbuf(msgData, pos, level, style, stack)
+			case M_FILE_ONLY:
+				s.writeMsg(msgData, pos, style)
+				s.writeStack(stack)
+			case M_STDOUT_FILE:
+				s.stdoutbuf(msgData, pos, level, style, stack)
 				s.writeMsg(msgData, pos, style)
 				s.writeStack(stack)
 			}
-			switch mode {
-			case M_STDOUT_ONLY, M_STDOUT_FILE:
-				s.stdoutbuf(msgData, pos, level, style, stack)
-			}
 		case LVL_ERROR, LVL_WARN, LVL_INFO, LVL_TRACE, LVL_DEBUG:
 			switch mode {
-			case M_FILE_ONLY, M_STDOUT_FILE:
-				s.writeMsg(msgData, pos, style)
-			}
-			switch mode {
-			case M_STDOUT_ONLY, M_STDOUT_FILE:
+			case M_STDOUT_ONLY:
 				s.stdoutbuf(msgData, pos, level, style, "")
+			case M_FILE_ONLY:
+				s.writeMsg(msgData, pos, style)
+			case M_STDOUT_FILE:
+				s.stdoutbuf(msgData, pos, level, style, "")
+				s.writeMsg(msgData, pos, style)
 			}
 		}
 		msgData.Put()
