@@ -306,11 +306,11 @@ func (s *logger) Wait() {
 
 // checkDir
 func (s *logger) checkDir() bool {
-	switch s.prefix {
-	case "":
-	default:
-		switch s.mkdir {
-		case false:
+	switch s.mkdir {
+	case false:
+		switch s.prefix {
+		case "":
+		default:
 			dir := filepath.Dir(s.prefix)
 			_, err := os.Stat(dir)
 			if err != nil && os.IsNotExist(err) {
