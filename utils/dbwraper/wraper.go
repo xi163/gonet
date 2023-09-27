@@ -17,6 +17,26 @@ type Wraper struct {
 	Gorm  Gorm.DB
 }
 
+func InitRedis(RedisConf any) {
+	json.Parse(json.Bytes(RedisConf), &Redis.Conf)
+	Wrap.Redis.Init(Redis.Conf)
+}
+
+func InitMongo(MongoConf any) {
+	json.Parse(json.Bytes(MongoConf), &Mongo.Conf)
+	Wrap.Mongo.Init(Mongo.Conf)
+}
+
+func InitMySql(SqlConf any) {
+	json.Parse(json.Bytes(SqlConf), &Sql.Conf)
+	Wrap.Sql.Init(Sql.Conf)
+}
+
+func InitMyGorm(GormConf any) {
+	json.Parse(json.Bytes(GormConf), &Gorm.Conf)
+	Wrap.Gorm.Init(Gorm.Conf)
+}
+
 func Init(RedisConf, MongoConf, SqlConf, GormConf any) {
 	json.Parse(json.Bytes(RedisConf), &Redis.Conf)
 	json.Parse(json.Bytes(MongoConf), &Mongo.Conf)

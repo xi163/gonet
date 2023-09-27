@@ -746,7 +746,7 @@ func (s *logger) push(prefix, content string, pos int, style Style, stack string
 
 // shift
 func (s *logger) shift(tm *time.Time) {
-	if tm.Day() != s.day {
+	if tm.Day() != s.day { //new day
 		s.close()
 		// 2006/01/02 15:04:05.000000
 		YMD := tm.Format("2006-01-02")
@@ -756,21 +756,9 @@ func (s *logger) shift(tm *time.Time) {
 		}, "")
 		_, err := os.Stat(s.path)
 		if err != nil && os.IsNotExist(err) {
-		} else {
-			os.Remove(s.path)
-		}
-		s.open(s.path)
-		s.day = tm.Day()
-	} else {
-		sta, err := os.Stat(s.path)
-		if err != nil && os.IsNotExist(err) {
-			s.close()
 			s.open(s.path)
-			return
-		}
-		if sta.Size() < s.size {
-		} else {
-			s.close()
+			s.day = tm.Day()
+		} else { //existed
 			YMD := tm.Format("2006-01-02")
 			HMS := tm.Format("15.04.05.000000")
 			s.path = strings.Join([]string{
@@ -779,7 +767,8 @@ func (s *logger) shift(tm *time.Time) {
 			_, err := os.Stat(s.path)
 			if err != nil && os.IsNotExist(err) {
 				s.open(s.path)
-			} else {
+				s.day = tm.Day()
+			} else { //existed
 				for i := 0; ; {
 					s.path = strings.Join([]string{
 						s.prefix, strconv.Itoa(s.pid), "_", YMD, ".", HMS, ".", strconv.Itoa(i), ".log",
@@ -787,9 +776,83 @@ func (s *logger) shift(tm *time.Time) {
 					_, err := os.Stat(s.path)
 					if err != nil && os.IsNotExist(err) {
 						s.open(s.path)
+						s.day = tm.Day()
 						break
-					} else {
+					} else { //existed
 						i++
+					}
+				}
+			}
+		}
+	} else { //current day
+		sta, err := os.Stat(s.path)
+		if err != nil && os.IsNotExist(err) {
+			YMD := tm.Format("2006-01-02")
+			HMS := tm.Format("15.04.05")
+			s.path = strings.Join([]string{
+				s.prefix, strconv.Itoa(s.pid), "_", YMD, ".", HMS, ".log",
+			}, "")
+			_, err := os.Stat(s.path)
+			if err != nil && os.IsNotExist(err) {
+				s.open(s.path)
+			} else { //existed
+				YMD := tm.Format("2006-01-02")
+				HMS := tm.Format("15.04.05.000000")
+				s.path = strings.Join([]string{
+					s.prefix, strconv.Itoa(s.pid), "_", YMD, ".", HMS, ".log",
+				}, "")
+				_, err := os.Stat(s.path)
+				if err != nil && os.IsNotExist(err) {
+					s.open(s.path)
+				} else { //existed
+					for i := 0; ; {
+						s.path = strings.Join([]string{
+							s.prefix, strconv.Itoa(s.pid), "_", YMD, ".", HMS, ".", strconv.Itoa(i), ".log",
+						}, "")
+						_, err := os.Stat(s.path)
+						if err != nil && os.IsNotExist(err) {
+							s.open(s.path)
+							break
+						} else { //existed
+							i++
+						}
+					}
+				}
+			}
+		} else { //existed
+			if sta.Size() < s.size {
+			} else {
+				s.close()
+				YMD := tm.Format("2006-01-02")
+				HMS := tm.Format("15.04.05")
+				s.path = strings.Join([]string{
+					s.prefix, strconv.Itoa(s.pid), "_", YMD, ".", HMS, ".log",
+				}, "")
+				_, err := os.Stat(s.path)
+				if err != nil && os.IsNotExist(err) {
+					s.open(s.path)
+				} else { //existed
+					YMD := tm.Format("2006-01-02")
+					HMS := tm.Format("15.04.05.000000")
+					s.path = strings.Join([]string{
+						s.prefix, strconv.Itoa(s.pid), "_", YMD, ".", HMS, ".log",
+					}, "")
+					_, err := os.Stat(s.path)
+					if err != nil && os.IsNotExist(err) {
+						s.open(s.path)
+					} else { //existed
+						for i := 0; ; {
+							s.path = strings.Join([]string{
+								s.prefix, strconv.Itoa(s.pid), "_", YMD, ".", HMS, ".", strconv.Itoa(i), ".log",
+							}, "")
+							_, err := os.Stat(s.path)
+							if err != nil && os.IsNotExist(err) {
+								s.open(s.path)
+								break
+							} else { //existed
+								i++
+							}
+						}
 					}
 				}
 			}
