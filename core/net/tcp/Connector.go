@@ -22,7 +22,7 @@ type Connector interface {
 	Retry() bool
 	EnableRetry(bool)
 	ServerAddr() string
-	ConnectTCP(address ...string)
+	ConnectTCP(header http.Header, address ...string)
 	SetProtocolCallback(cb cb.OnProtocol)
 	SetNewConnectionCallback(cb cb.OnNewConnection)
 	SetConnectErrorCallback(cb cb.OnConnectError)
@@ -35,6 +35,7 @@ type Connector interface {
 type connector struct {
 	name, tmp       string
 	retry           bool
+	header          http.Header
 	addr            *conn.Address
 	dialTimeout     time.Duration
 	d               time.Duration
@@ -134,13 +135,11 @@ func (s *connector) connectTCPTimeout(addr *conn.Address, d time.Duration) error
 	return nil
 }
 
-func (s *connector) connectWSTimeout(addr *conn.Address, d time.Duration) error {
-	dialer := websocket.Dialer{}
-	dialer.Proxy = http.ProxyFromEnvironment
-	dialer.HandshakeTimeout = d
+func (s *connector) connectWSTimeout(addr *conn.Address, d time.Duration, header http.Header) error {
+	dialer := websocket.Dialer{Proxy: http.ProxyFromEnvironment, HandshakeTimeout: d}
 	u := url.URL{Scheme: addr.Proto, Host: addr.Addr, Path: addr.Path}
 	logs.Debugf("%s", addr.Format())
-	c, _, err := dialer.Dial(u.String(), nil)
+	c, _, err := dialer.Dial(u.String(), header)
 	if err != nil {
 		// logs.Errorf(err.Error())
 		s.onConnectError(addr.Proto, err)
@@ -157,18 +156,19 @@ func (s *connector) connectWSTimeout(addr *conn.Address, d time.Duration) error 
 	return nil
 }
 
-func (s *connector) ConnectTCP(address ...string) {
+func (s *connector) ConnectTCP(header http.Header, address ...string) {
 	s.assertProtocol()
 	s.assertOnNewConnection()
 	if len(address) > 0 {
 		s.addr = conn.ParseAddress(address[0])
 	}
+	s.header = header
 	if s.addr != nil {
 		s.toName()
 		s.channel = s.onProtocol(s.addr.Proto)
 		switch s.addr.Proto {
 		case "ws", "wss":
-			if s.connectWSTimeout(s.addr, s.dialTimeout) != nil && s.retry {
+			if s.connectWSTimeout(s.addr, s.dialTimeout, s.header) != nil && s.retry {
 				time.AfterFunc(s.d, s.reconnect)
 			}
 		case "tcp":
@@ -187,7 +187,7 @@ func (s *connector) reconnect() {
 			time.AfterFunc(s.d, s.reconnect)
 		}
 	case "ws", "wss":
-		if s.connectWSTimeout(s.addr, s.dialTimeout) != nil && s.retry {
+		if s.connectWSTimeout(s.addr, s.dialTimeout, s.header) != nil && s.retry {
 			time.AfterFunc(s.d, s.reconnect)
 		}
 	}

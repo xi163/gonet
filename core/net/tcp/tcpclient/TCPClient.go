@@ -1,6 +1,7 @@
 package tcpclient
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/cwloo/gonet/core/cb"
@@ -11,7 +12,7 @@ import (
 type TCPClient interface {
 	Name() string
 	Peers() conn.Sessions
-	ConnectTCP(address ...string)
+	ConnectTCP(header http.Header, address ...string)
 	Reconnect()
 	Disconnect()
 	Retry() bool

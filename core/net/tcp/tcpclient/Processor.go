@@ -3,6 +3,7 @@ package tcpclient
 import (
 	"errors"
 	"net"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -214,9 +215,9 @@ func (s *Processor) onProtocol(proto string) transmit.Channel {
 	panic("no proto setup")
 }
 
-func (s *Processor) ConnectTCP(address ...string) {
+func (s *Processor) ConnectTCP(header http.Header, address ...string) {
 	s.assertConnector()
-	s.connector.ConnectTCP(address...)
+	s.connector.ConnectTCP(header, address...)
 }
 
 func (s *Processor) onConnectError(proto string, err error) {

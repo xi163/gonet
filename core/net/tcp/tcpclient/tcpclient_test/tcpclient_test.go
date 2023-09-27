@@ -40,7 +40,7 @@ func NewClient(addr string) *EchoClient {
 }
 
 func (s *EchoClient) connect() {
-	s.client.ConnectTCP(s.addr)
+	s.client.ConnectTCP(nil, s.addr)
 }
 
 func (s *EchoClient) onProtocol(proto string) transmit.Channel {
