@@ -226,7 +226,7 @@ func (s *logger) update(tm *time.Time) (ok bool) {
 	}
 	return
 ERR:
-	ErrorfLF("error")
+	Errorf_fl_fn("error")
 	return
 }
 

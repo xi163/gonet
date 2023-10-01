@@ -29,9 +29,9 @@ func Test(t *testing.T) {
 func out_test(t *testing.T) {
 	color_linux.EnumColorStyle()
 
-	logs.InfofP("errMsg=%v", logs.SprintErrorf(3, "error"))
+	logs.Infof_pure("errMsg=%v", logs.SprintErrorf(3, "error"))
 
-	logs.InfofP("------------------------ F_DETAIL")
+	logs.Infof_pure("------------------------ F_DETAIL")
 	logs.SetStyle(logs.F_DETAIL)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -40,7 +40,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_TMSTMP")
+	logs.Infof_pure("------------------------ F_TMSTMP")
 	logs.SetStyle(logs.F_TMSTMP)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -49,7 +49,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_FN")
+	logs.Infof_pure("------------------------ F_FN")
 	logs.SetStyle(logs.F_FN)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -58,7 +58,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_TMSTMP_FN")
+	logs.Infof_pure("------------------------ F_TMSTMP_FN")
 	logs.SetStyle(logs.F_TMSTMP_FN)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -67,7 +67,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_FL")
+	logs.Infof_pure("------------------------ F_FL")
 	logs.SetStyle(logs.F_FL)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -76,7 +76,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_TMSTMP_FL")
+	logs.Infof_pure("------------------------ F_TMSTMP_FL")
 	logs.SetStyle(logs.F_TMSTMP_FL)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -85,7 +85,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_FL_FN")
+	logs.Infof_pure("------------------------ F_FL_FN")
 	logs.SetStyle(logs.F_FL_FN)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -94,7 +94,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_TMSTMP_FL_FN")
+	logs.Infof_pure("------------------------ F_TMSTMP_FL_FN")
 	logs.SetStyle(logs.F_TMSTMP_FL_FN)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -103,7 +103,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_TEXT")
+	logs.Infof_pure("------------------------ F_TEXT")
 	logs.SetStyle(logs.F_TEXT)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")
@@ -112,7 +112,7 @@ func out_test(t *testing.T) {
 	logs.Tracef("hello,word")
 	logs.Debugf("hello,word")
 
-	logs.InfofP("------------------------ F_PURE")
+	logs.Infof_pure("------------------------ F_PURE")
 	logs.SetStyle(logs.F_PURE)
 	// logs.Fatalf("hello,word")
 	logs.Errorf("hello,word")

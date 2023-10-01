@@ -101,281 +101,281 @@ func Debugf(format string, v ...any) {
 }
 
 // F_DETAIL
-func FatalfD(format string, v ...any) {
+func Fatalf_detail(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_DETAIL_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfD(format string, v ...any) {
+func Errorf_detail(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_DETAIL, 4, format, v...)
 }
 
-func WarnfD(format string, v ...any) {
+func Warnf_detail(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_DETAIL, 4, format, v...)
 }
 
-func InfofD(format string, v ...any) {
+func Infof_detail(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_DETAIL, 4, format, v...)
 }
 
-func TracefD(format string, v ...any) {
+func Tracef_detail(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_DETAIL, 4, format, v...)
 }
 
-func DebugfD(format string, v ...any) {
+func Debugf_detail(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_DETAIL, 4, format, v...)
 }
 
 // F_TMSTMP
-func FatalfT(format string, v ...any) {
+func Fatalf_tmsp(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_TMSTMP_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfT(format string, v ...any) {
+func Errorf_tmsp(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_TMSTMP, 4, format, v...)
 }
 
-func WarnfT(format string, v ...any) {
+func Warnf_tmsp(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TMSTMP, 4, format, v...)
 }
 
-func InfofT(format string, v ...any) {
+func Infof_tmsp(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TMSTMP, 4, format, v...)
 }
 
-func TracefT(format string, v ...any) {
+func Tracef_tmsp(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_TMSTMP, 4, format, v...)
 }
 
-func DebugfT(format string, v ...any) {
+func Debugf_tmsp(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TMSTMP, 4, format, v...)
 }
 
 // F_FN
-func FatalfF(format string, v ...any) {
+func Fatalf_fn(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_FN_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfF(format string, v ...any) {
+func Errorf_fn(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_FN, 4, format, v...)
 }
 
-func WarnfF(format string, v ...any) {
+func Warnf_fn(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_FN, 4, format, v...)
 }
 
-func InfofF(format string, v ...any) {
+func Infof_fn(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_FN, 4, format, v...)
 }
 
-func TracefF(format string, v ...any) {
+func Tracef_fn(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_FN, 4, format, v...)
 }
 
-func DebugfF(format string, v ...any) {
+func Debugf_fn(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_FN, 4, format, v...)
 }
 
 // F_TMSTMP_FN
-func FatalfTF(format string, v ...any) {
+func Fatalf_tmsp_fn(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_TMSTMP_FN_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfTF(format string, v ...any) {
+func Errorf_tmsp_fn(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_TMSTMP_FN, 4, format, v...)
 }
 
-func WarnfTF(format string, v ...any) {
+func Warnf_tmsp_fn(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TMSTMP_FN, 4, format, v...)
 }
 
-func InfofTF(format string, v ...any) {
+func Infof_tmsp_fn(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TMSTMP_FN, 4, format, v...)
 }
 
-func TracefTF(format string, v ...any) {
+func Tracef_tmsp_fn(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_TMSTMP_FN, 4, format, v...)
 }
 
-func DebugfTF(format string, v ...any) {
+func Debugf_tmsp_fn(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TMSTMP_FN, 4, format, v...)
 }
 
 // F_FL
-func FatalfL(format string, v ...any) {
+func Fatalf_fl(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_FL_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfL(format string, v ...any) {
+func Errorf_fl(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_FL, 4, format, v...)
 }
 
-func WarnfL(format string, v ...any) {
+func Warnf_fl(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_FL, 4, format, v...)
 }
 
-func InfofL(format string, v ...any) {
+func Infof_fl(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_FL, 4, format, v...)
 }
 
-func TracefL(format string, v ...any) {
+func Tracef_fl(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_FL, 4, format, v...)
 }
 
-func DebugfL(format string, v ...any) {
+func Debugf_fl(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_FL, 4, format, v...)
 }
 
 // F_TMSTMP_FL
-func FatalfTL(format string, v ...any) {
+func Fatalf_tmsp_fl(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_TMSTMP_FL_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfTL(format string, v ...any) {
+func Errorf_tmsp_fl(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_TMSTMP_FL, 4, format, v...)
 }
 
-func WarnfTL(format string, v ...any) {
+func Warnf_tmsp_fl(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TMSTMP_FL, 4, format, v...)
 }
 
-func InfofTL(format string, v ...any) {
+func Infof_tmsp_fl(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TMSTMP_FL, 4, format, v...)
 }
 
-func TracefTL(format string, v ...any) {
+func Tracef_tmsp_fl(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_TMSTMP_FL, 4, format, v...)
 }
 
-func DebugfTL(format string, v ...any) {
+func Debugf_tmsp_fl(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TMSTMP_FL, 4, format, v...)
 }
 
 // F_FL_FN
-func FatalfLF(format string, v ...any) {
+func Fatalf_fl_fn(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_FL_FN_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfLF(format string, v ...any) {
+func Errorf_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_FL_FN, 4, format, v...)
 }
 
-func WarnfLF(format string, v ...any) {
+func Warnf_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_FL_FN, 4, format, v...)
 }
 
-func InfofLF(format string, v ...any) {
+func Infof_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_FL_FN, 4, format, v...)
 }
 
-func TracefLF(format string, v ...any) {
+func Tracef_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_FL_FN, 4, format, v...)
 }
 
-func DebugfLF(format string, v ...any) {
+func Debugf_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_FL_FN, 4, format, v...)
 }
 
 // F_TMSTMP_FL_FN
-func FatalfTLF(format string, v ...any) {
+func Fatalf_tmsp_fl_fn(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_TMSTMP_FL_FN_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfTLF(format string, v ...any) {
+func Errorf_tmsp_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_TMSTMP_FL_FN, 4, format, v...)
 }
 
-func WarnfTLF(format string, v ...any) {
+func Warnf_tmsp_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TMSTMP_FL_FN, 4, format, v...)
 }
 
-func InfofTLF(format string, v ...any) {
+func Infof_tmsp_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TMSTMP_FL_FN, 4, format, v...)
 }
 
-func TracefTLF(format string, v ...any) {
+func Tracef_tmsp_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_TMSTMP_FL_FN, 4, format, v...)
 }
 
-func DebugfTLF(format string, v ...any) {
+func Debugf_tmsp_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TMSTMP_FL_FN, 4, format, v...)
 }
 
 // F_TEXT
-func FatalfTT(format string, v ...any) {
+func Fatalf_text(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_TEXT_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfTT(format string, v ...any) {
+func Errorf_text(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_TEXT, 4, format, v...)
 }
 
-func WarnfTT(format string, v ...any) {
+func Warnf_text(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TEXT, 4, format, v...)
 }
 
-func InfofTT(format string, v ...any) {
+func Infof_text(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TEXT, 4, format, v...)
 }
 
-func TracefTT(format string, v ...any) {
+func Tracef_text(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_TEXT, 4, format, v...)
 }
 
-func DebugfTT(format string, v ...any) {
+func Debugf_text(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TEXT, 4, format, v...)
 }
 
 // F_PURE
-func FatalfP(format string, v ...any) {
+func Fatalf_pure(format string, v ...any) {
 	stack := string(debug.Stack())
 	inst.Write(stack, LVL_FATAL, F_PURE_SYNC, 4, format, v...)
 	inst.Wait()
 	panic(stack)
 }
 
-func ErrorfP(format string, v ...any) {
+func Errorf_pure(format string, v ...any) {
 	inst.Write("", LVL_ERROR, F_PURE, 4, format, v...)
 }
 
-func WarnfP(format string, v ...any) {
+func Warnf_pure(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_PURE, 4, format, v...)
 }
 
-func InfofP(format string, v ...any) {
+func Infof_pure(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_PURE, 4, format, v...)
 }
 
-func TracefP(format string, v ...any) {
+func Tracef_pure(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_PURE, 4, format, v...)
 }
 
-func DebugfP(format string, v ...any) {
+func Debugf_pure(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_PURE, 4, format, v...)
 }
