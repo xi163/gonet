@@ -239,7 +239,7 @@ func (s *Processor) OnClosed(peer conn.Session, reason conn.Reason, v ...any) {
 	}
 }
 
-func (s *Processor) OnMessage(peer conn.Session, msg any, recvTime timestamp.T) {
+func (s *Processor) OnMessage(peer conn.Session, msg any, msgType int, recvTime timestamp.T) {
 	// logs.Infof("")
 }
 

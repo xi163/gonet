@@ -73,7 +73,7 @@ func (s *EchoClient) onClosed(peer conn.Session, reason conn.Reason, v ...any) {
 	}
 }
 
-func (s *EchoClient) onMessage(peer conn.Session, msg any, recvTime timestamp.T) {
+func (s *EchoClient) onMessage(peer conn.Session, msg any, msgType int, recvTime timestamp.T) {
 	logs.Debugf("%v", string(msg.([]byte)))
 	// peer.Write(utils.Str2Byte("client"))
 }

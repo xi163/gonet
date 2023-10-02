@@ -23,7 +23,7 @@ type OnConnected func(peer conn.Session, v ...any)
 
 type OnClosed func(peer conn.Session, reason conn.Reason, v ...any)
 
-type OnMessage func(peer conn.Session, msg any, recvTime timestamp.T)
+type OnMessage func(peer conn.Session, msg any, msgType int, recvTime timestamp.T)
 
 type OnWriteComplete func(peer conn.Session)
 

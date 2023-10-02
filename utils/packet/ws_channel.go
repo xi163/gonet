@@ -5,6 +5,8 @@ import (
 	"errors"
 
 	"github.com/cwloo/gonet/core/net/transmit"
+	"github.com/cwloo/gonet/logs"
+	"github.com/cwloo/gonet/utils/codec"
 	"github.com/gorilla/websocket"
 )
 
@@ -16,39 +18,59 @@ func NewWSChannel() transmit.Channel {
 	return &WSChannel{}
 }
 
-func (s *WSChannel) OnRecv(conn any) (any, error) {
+func (s *WSChannel) OnRecv(conn any) (int, any, error) {
 	c, _ := conn.(*websocket.Conn)
 	if c == nil {
-		panic("error")
+		logs.Fatalf("error")
 	}
 	//len+CRC，4字节
 	// c.SetReadLimit(4)
 	msgType, b, err := c.ReadMessage()
 	if err != nil {
 		// logs.Errorf(err.Error())
-		return nil, err
+		return msgType, nil, err
 	}
 	switch msgType {
-	case websocket.PingMessage:
-		return nil, errors.New("error PingMessage")
-	case websocket.TextMessage:
-		return nil, errors.New("error TextMessage")
+	//case websocket.PingMessage:
+	//	return msgType, nil, errors.New("error PingMessage")
+	//case websocket.TextMessage:
+	//	return msgType, nil, errors.New("error TextMessage")
 	case websocket.CloseMessage:
-		return nil, errors.New("peer closed")
+		return msgType, nil, errors.New("peer closed")
 	}
-	return b, err
+	return msgType, b, err
 }
 
-func (s *WSChannel) OnSend(conn any, msg any) error {
+func (s *WSChannel) OnSend(conn any, msg any, msgType int) error {
 	c, _ := conn.(*websocket.Conn)
 	if c == nil {
-		panic("error")
+		logs.Fatalf("error")
 	}
-	// c.SetWriteDeadline(time.Now().Add(time.Duration(60) * time.Second))
-	switch msg := msg.(type) {
-	case *Msg:
-		b, _ := Pack(msg, binary.LittleEndian)
-		return c.WriteMessage(websocket.BinaryMessage, b)
+	switch msgType {
+	case websocket.TextMessage:
+		// c.SetWriteDeadline(time.Now().Add(time.Duration(60) * time.Second))
+		switch msg := msg.(type) {
+		case string:
+			return c.WriteMessage(msgType, []byte(msg))
+		case []byte:
+			return c.WriteMessage(msgType, msg)
+		}
+	case websocket.BinaryMessage:
+		// c.SetWriteDeadline(time.Now().Add(time.Duration(60) * time.Second))
+		switch msg := msg.(type) {
+		case string:
+			return c.WriteMessage(msgType, []byte(msg))
+		case []byte:
+			return c.WriteMessage(msgType, msg)
+		case *Msg:
+			b, _ := Pack(msg, binary.LittleEndian)
+			return c.WriteMessage(msgType, b)
+		default:
+			b, _ := codec.Encode(msg)
+			return c.WriteMessage(msgType, b)
+		}
+	default:
+		logs.Fatalf("msg type")
 	}
 	panic("error")
 }

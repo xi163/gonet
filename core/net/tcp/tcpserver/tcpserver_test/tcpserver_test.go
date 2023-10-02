@@ -96,7 +96,7 @@ func (s *EchoServer) onClosed(peer conn.Session, reason conn.Reason, v ...any) {
 	}
 }
 
-func (s *EchoServer) onMessage(peer conn.Session, msg any, recvTime timestamp.T) {
+func (s *EchoServer) onMessage(peer conn.Session, msg any, msgType int, recvTime timestamp.T) {
 	logs.Debugf("%v", string(msg.([]byte)))
 	// peer.Write(utils.Str2Byte("server"))
 }

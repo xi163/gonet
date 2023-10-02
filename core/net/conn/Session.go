@@ -53,6 +53,8 @@ type Session interface {
 	SetContext(key any, val any) (old any)
 	GetContext(key any) any
 	Write(msg any)
+	WriteTextMessage(msg any)
+	WriteBinaryMessage(msg any)
 	Close()
 	CloseAfter(d time.Duration)
 	CloseExpired()

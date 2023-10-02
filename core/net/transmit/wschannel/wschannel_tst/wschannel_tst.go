@@ -17,41 +17,55 @@ func NewWSChannel() transmit.Channel {
 	return &WSChannel{}
 }
 
-func (s *WSChannel) OnRecv(conn any) (any, error) {
+func (s *WSChannel) OnRecv(conn any) (int, any, error) {
 	c, _ := conn.(*websocket.Conn)
 	if c == nil {
-		panic(errors.New("error"))
+		logs.Fatalf("error")
 	}
 	// c.SetReadLimit(1024)
 	msgType, b, err := c.ReadMessage()
 	if err != nil {
 		logs.Errorf(err.Error())
-		return nil, err
+		return msgType, nil, err
 	}
 	switch msgType {
-	case websocket.PingMessage:
-		return nil, errors.New("error PingMessage")
-	case websocket.TextMessage:
-		return nil, errors.New("error TextMessage")
+	// case websocket.PingMessage:
+	// 	return msgType, nil, errors.New("error PingMessage")
+	// case websocket.TextMessage:
+	// 	return msgType, nil, errors.New("error TextMessage")
 	case websocket.CloseMessage:
-		return nil, errors.New("peer closed")
+		return msgType, nil, errors.New("peer closed")
 	}
-	return b, err
+	return msgType, b, err
 }
 
-func (s *WSChannel) OnSend(conn any, msg any) error {
-	// logs.Warnf("%v", string(msg.([]byte)))
+func (s *WSChannel) OnSend(conn any, msg any, msgType int) error {
 	c, _ := conn.(*websocket.Conn)
 	if c == nil {
-		panic(errors.New("error"))
+		logs.Fatalf("error")
 	}
-	// c.SetWriteDeadline(time.Now().Add(time.Duration(60) * time.Second))
-	switch msg := msg.(type) {
-	case string:
-		return c.WriteMessage(websocket.BinaryMessage, []byte(msg))
-	case []byte:
-		return c.WriteMessage(websocket.BinaryMessage, msg)
+	switch msgType {
+	case websocket.TextMessage:
+		// c.SetWriteDeadline(time.Now().Add(time.Duration(60) * time.Second))
+		switch msg := msg.(type) {
+		case string:
+			return c.WriteMessage(msgType, []byte(msg))
+		case []byte:
+			return c.WriteMessage(msgType, msg)
+		}
+	case websocket.BinaryMessage:
+		// c.SetWriteDeadline(time.Now().Add(time.Duration(60) * time.Second))
+		switch msg := msg.(type) {
+		case string:
+			return c.WriteMessage(msgType, []byte(msg))
+		case []byte:
+			return c.WriteMessage(msgType, msg)
+		default:
+			b, _ := codec.Encode(msg)
+			return c.WriteMessage(msgType, b)
+		}
+	default:
+		logs.Fatalf("msg type")
 	}
-	b, _ := codec.Encode(msg)
-	return c.WriteMessage(websocket.BinaryMessage, b)
+	panic("error")
 }

@@ -1,9 +1,8 @@
 package tcpchannel
 
 import (
-	"errors"
-
 	"github.com/cwloo/gonet/core/net/transmit"
+	logs "github.com/cwloo/gonet/logs"
 	"github.com/cwloo/gonet/utils/codec"
 	"github.com/cwloo/gonet/utils/conv"
 
@@ -18,31 +17,32 @@ func NewChannel() transmit.Channel {
 	return &Channel{}
 }
 
-func (s *Channel) OnRecv(conn any) (any, error) {
+func (s *Channel) OnRecv(conn any) (int, any, error) {
 	c, _ := conn.(net.Conn)
 	if c == nil {
-		panic(errors.New("error"))
+		logs.Fatalf("error")
 	}
 	buf := make([]byte, 1024)
 	n, err := Read(c, buf)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 	buf = buf[0:n]
-	return buf, nil
+	return 0, buf, nil
 }
 
-func (s *Channel) OnSend(conn any, msg any) error {
+func (s *Channel) OnSend(conn any, msg any, msgType int) error {
 	c, _ := conn.(net.Conn)
 	if c == nil {
-		panic(errors.New("error"))
+		logs.Fatalf("error")
 	}
 	switch msg := msg.(type) {
 	case string:
 		return WriteFull(c, conv.StrToByte(msg))
 	case []byte:
 		return WriteFull(c, msg)
+	default:
+		b, _ := codec.Encode(msg)
+		return WriteFull(c, b)
 	}
-	b, _ := codec.Encode(msg)
-	return WriteFull(c, b)
 }

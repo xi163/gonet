@@ -1,7 +1,6 @@
 package tcp
 
 import (
-	"errors"
 	"net"
 	"runtime"
 	"sync"
@@ -106,13 +105,13 @@ func (s *TCPConnection) Connected() bool {
 
 func (s *TCPConnection) assertConn() {
 	if s.conn == nil {
-		panic(errors.New("error"))
+		logs.Fatalf("error")
 	}
 }
 
 func (s *TCPConnection) assertChannel() {
 	if s.channel == nil {
-		panic(errors.New("error"))
+		logs.Fatalf("error")
 	}
 }
 
@@ -123,7 +122,7 @@ func (s *TCPConnection) assertChannel() {
 // 	if _, ok := s.conn.(net.Conn); ok {
 // 	} else if _, ok := s.conn.(*websocket.Conn); ok {
 // 	} else {
-// 		panic(errors.New("error"))
+// 		logs.Fatalf("error")
 // 	}
 // }
 
@@ -208,7 +207,7 @@ func (s *TCPConnection) ConnectEstablished(v ...any) {
 
 func (s *TCPConnection) connectEstablished(v ...any) {
 	if s.id == 0 {
-		panic(errors.New("error"))
+		logs.Fatalf("error")
 	}
 	s.setState(conn.KConnected)
 	s.buckets.Push(s)
@@ -222,7 +221,7 @@ func (s *TCPConnection) connectEstablished(v ...any) {
 
 func (s *TCPConnection) ConnectDestroyed() {
 	if s.id == 0 {
-		panic(errors.New("error"))
+		logs.Fatalf("error")
 	}
 	s.setState(conn.KDisconnected)
 	s.buckets.Put()
@@ -251,7 +250,7 @@ LOOP:
 			// runtime.Gosched()
 		}
 		i++
-		msg, err := s.channel.OnRecv(s.conn)
+		msgType, msg, err := s.channel.OnRecv(s.conn)
 		if err != nil {
 			// logs.Errorf("%v", err)
 			// if !IsEOFOrReadError(err) {
@@ -279,12 +278,12 @@ LOOP:
 				break LOOP
 			}
 		} else if msg == nil {
-			panic(errors.New("error"))
+			logs.Fatalf("error")
 		} else if s.onMessage != nil {
 			s.buckets.Update(s)
-			s.onMessage(s, msg, timestamp.Now())
+			s.onMessage(s, msg, msgType, timestamp.Now())
 		} else {
-			panic(errors.New("error"))
+			logs.Fatalf("error")
 		}
 	}
 	// 关闭执行流程
@@ -325,16 +324,31 @@ LOOP:
 			// if ctx := s.GetContext("ctx").(user_context.Ctx); ctx != nil {
 			// 	logs.Debugf("[%v:%v] write =>", ctx.GetUserId(), ctx.GetSession())
 			// }
-			err := s.channel.OnSend(s.conn, msg)
-			if err != nil {
-				logs.Errorf("%v", err)
-				// if !transmit.IsEOFOrWriteError(err) {
-				// 	if s.errorCallback != nil {
-				// 		s.errorCallback(err)
-				// 	}
-				// }
-			} else if s.onWriteComplete != nil {
-				s.onWriteComplete(s)
+			switch msg := msg.(type) {
+			case transmit.Messagetruct:
+				err := s.channel.OnSend(s.conn, msg.Msg, msg.Type)
+				if err != nil {
+					logs.Errorf("%v", err)
+					// if !transmit.IsEOFOrWriteError(err) {
+					// 	if s.errorCallback != nil {
+					// 		s.errorCallback(err)
+					// 	}
+					// }
+				} else if s.onWriteComplete != nil {
+					s.onWriteComplete(s)
+				}
+			default:
+				err := s.channel.OnSend(s.conn, msg, 0)
+				if err != nil {
+					logs.Errorf("%v", err)
+					// if !transmit.IsEOFOrWriteError(err) {
+					// 	if s.errorCallback != nil {
+					// 		s.errorCallback(err)
+					// 	}
+					// }
+				} else if s.onWriteComplete != nil {
+					s.onWriteComplete(s)
+				}
 			}
 			return
 		})
@@ -353,7 +367,7 @@ LOOP:
 					// logs.Infof("self closed connection delay.")
 					s.setReason(conn.KSelfClosedDelay)
 				default:
-					panic("error")
+					logs.Fatalf("error")
 				}
 			}
 			break LOOP
@@ -372,6 +386,24 @@ func (s *TCPConnection) Write(msg any) {
 	}
 	if s.Connected() {
 		s.mq.Push(msg)
+	}
+}
+
+func (s *TCPConnection) WriteTextMessage(msg any) {
+	if msg == nil {
+		return
+	}
+	if s.Connected() {
+		s.mq.Push(transmit.Messagetruct{Type: websocket.TextMessage, Msg: msg})
+	}
+}
+
+func (s *TCPConnection) WriteBinaryMessage(msg any) {
+	if msg == nil {
+		return
+	}
+	if s.Connected() {
+		s.mq.Push(transmit.Messagetruct{Type: websocket.BinaryMessage, Msg: msg})
 	}
 }
 
@@ -419,7 +451,7 @@ func (s *TCPConnection) notifyClose(flag int) {
 	case int(conn.KSelfClosed):
 		s.mq.Push(&mq.ExitStruct{Code: int(conn.KSelfClosed)})
 	default:
-		panic("error")
+		logs.Fatalf("error")
 	}
 }
 
@@ -448,7 +480,7 @@ func (s *TCPConnection) close() {
 				logs.Errorf("%v", err)
 			}
 		} else {
-			panic(errors.New("error"))
+			logs.Fatalf("error")
 		}
 		s.closed = true
 		s.closing.Reset()
