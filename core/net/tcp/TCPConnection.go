@@ -143,14 +143,21 @@ func (s *TCPConnection) Type() conn.Type {
 }
 
 func (s *TCPConnection) SetContext(key any, val any) (old any) {
-	if val != nil {
-		if val, ok := s.context[key]; ok {
+	switch val {
+	case nil:
+		val, ok := s.context[key]
+		switch ok {
+		case true:
+			old = val
+			delete(s.context, key)
+		}
+	default:
+		val, ok := s.context[key]
+		switch ok {
+		case true:
 			old = val
 		}
 		s.context[key] = val
-	} else if val, ok := s.context[key]; ok {
-		old = val
-		delete(s.context, key)
 	}
 	return
 }
