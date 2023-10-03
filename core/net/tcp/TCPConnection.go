@@ -381,29 +381,31 @@ LOOP:
 
 // 写数据
 func (s *TCPConnection) Write(msg any) {
-	if msg == nil {
-		return
-	}
-	if s.Connected() {
-		s.mq.Push(msg)
-	}
-}
-
-func (s *TCPConnection) WriteTextMessage(msg any) {
-	if msg == nil {
-		return
-	}
-	if s.Connected() {
-		s.mq.Push(transmit.Messagetruct{Type: websocket.TextMessage, Msg: msg})
+	switch msg {
+	case nil:
+	default:
+		switch s.Connected() {
+		case true:
+			s.mq.Push(msg)
+		}
 	}
 }
 
-func (s *TCPConnection) WriteBinaryMessage(msg any) {
-	if msg == nil {
-		return
-	}
-	if s.Connected() {
-		s.mq.Push(transmit.Messagetruct{Type: websocket.BinaryMessage, Msg: msg})
+func (s *TCPConnection) WriteText(msg any) {
+	switch msg {
+	case nil:
+	default:
+		switch s.Connected() {
+		case true:
+			switch msg := msg.(type) {
+			case []byte:
+				s.mq.Push(transmit.Messagetruct{Type: websocket.TextMessage, Msg: msg})
+			case string:
+				s.mq.Push(transmit.Messagetruct{Type: websocket.TextMessage, Msg: []byte(msg)})
+			default:
+				s.mq.Push(transmit.Messagetruct{Type: websocket.TextMessage, Msg: msg})
+			}
+		}
 	}
 }
 
