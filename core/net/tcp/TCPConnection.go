@@ -338,7 +338,7 @@ LOOP:
 					s.onWriteComplete(s)
 				}
 			default:
-				err := s.channel.OnSend(s.conn, msg, 0)
+				err := s.channel.OnSend(s.conn, msg, websocket.BinaryMessage)
 				if err != nil {
 					logs.Errorf("%v", err)
 					// if !transmit.IsEOFOrWriteError(err) {
