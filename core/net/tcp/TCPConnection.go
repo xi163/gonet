@@ -38,6 +38,7 @@ type TCPConnection struct {
 	remoteAddr        string
 	protoName         string
 	conn              any
+	l                 sync.RWMutex
 	context           map[any]any
 	connType          conn.Type
 	mq                mq.BlockQueue
@@ -61,6 +62,7 @@ type TCPConnection struct {
 
 func NewTCPConnection(id int64, name string, c any, connType conn.Type, channel transmit.Channel, localAddr, remoteAddr, protoName string, d time.Duration) conn.Session {
 	peer := connPool.Get().(*TCPConnection)
+	//peer := &TCPConnection{}
 	peer.id = id
 	peer.name = name
 	peer.conn = c
@@ -70,6 +72,7 @@ func NewTCPConnection(id int64, name string, c any, connType conn.Type, channel 
 	peer.state = conn.KDisconnected
 	peer.reason = conn.KNoError
 	peer.connType = connType
+	peer.l = sync.RWMutex{}
 	peer.context = map[any]any{}
 	peer.mq = lq.NewQueue(0)
 	peer.channel = channel
@@ -143,6 +146,7 @@ func (s *TCPConnection) Type() conn.Type {
 }
 
 func (s *TCPConnection) SetContext(key any, val any) (old any) {
+	s.l.Lock()
 	switch val {
 	case nil:
 		v, ok := s.context[key]
@@ -159,14 +163,15 @@ func (s *TCPConnection) SetContext(key any, val any) (old any) {
 		}
 		s.context[key] = val
 	}
+	s.l.Unlock()
 	return
 }
 
-func (s *TCPConnection) GetContext(key any) any {
-	if val, ok := s.context[key]; ok {
-		return val
-	}
-	return nil
+func (s *TCPConnection) GetContext(key any) (val any) {
+	s.l.RLock()
+	val = s.context[key]
+	s.l.RUnlock()
+	return
 }
 
 func (s *TCPConnection) SetConnectedCallback(cb cb.OnConnected) {
