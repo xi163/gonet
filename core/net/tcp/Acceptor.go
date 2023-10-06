@@ -25,7 +25,7 @@ type Acceptor interface {
 	GetIdleTimeout() time.Duration
 	SetCertFile(certfile, keyfile string)
 	SetProtocolCallback(cb cb.OnProtocol)
-	SetHandshakeCallback(cb cb.OnHandshake)
+	SetVerifyCallback(cb cb.OnVerify)
 	SetConditionCallback(cb cb.OnCondition)
 	SetNewConnectionCallback(cb cb.OnNewConnection)
 	SetHandshakeTimeout(d time.Duration)
@@ -50,7 +50,7 @@ type acceptor struct {
 	listener          net.Listener
 	channel           transmit.Channel
 	onProtocol        cb.OnProtocol
-	onHandshake       cb.OnHandshake
+	onVerify          cb.OnVerify
 	onCondition       cb.OnCondition
 	onNewConnection   cb.OnNewConnection
 	handshakeTimeout  time.Duration
@@ -106,8 +106,8 @@ func (s *acceptor) SetProtocolCallback(cb cb.OnProtocol) {
 	s.onProtocol = cb
 }
 
-func (s *acceptor) SetHandshakeCallback(cb cb.OnHandshake) {
-	s.onHandshake = cb
+func (s *acceptor) SetVerifyCallback(cb cb.OnVerify) {
+	s.onVerify = cb
 }
 
 func (s *acceptor) SetConditionCallback(cb cb.OnCondition) {
@@ -208,19 +208,21 @@ func (s *acceptor) accept() {
 		switch conn.UsePool {
 		case true:
 			connpool.Do(cb.NewFunctor00(func() {
-				if s.onCondition != nil && !s.onCondition(c.RemoteAddr()) {
+				peerRegion := conn.Region{}
+				if s.onCondition != nil && !s.onCondition(c.RemoteAddr(), &peerRegion) {
 					c.Close()
 				} else if s.onNewConnection != nil {
-					s.onNewConnection(c, s.channel, s.addr.Proto)
+					s.onNewConnection(c, s.channel, s.addr.Proto, &peerRegion)
 				} else {
 					c.Close()
 				}
 			}))
 		default:
-			if s.onCondition != nil && !s.onCondition(c.RemoteAddr()) {
+			peerRegion := conn.Region{}
+			if s.onCondition != nil && !s.onCondition(c.RemoteAddr(), &peerRegion) {
 				c.Close()
 			} else if s.onNewConnection != nil {
-				s.onNewConnection(c, s.channel, s.addr.Proto)
+				s.onNewConnection(c, s.channel, s.addr.Proto, &peerRegion)
 			} else {
 				c.Close()
 			}
@@ -245,7 +247,7 @@ func (s acceptor) upgradeAndServe(addr *conn.Address) {
 	}
 	mux := http.NewServeMux()
 	mux.HandleFunc(addr.Path, func(w http.ResponseWriter, r *http.Request) {
-		if s.onHandshake != nil && !s.onHandshake(w, r) {
+		if s.onVerify != nil && !s.onVerify(w, r) {
 			return
 		}
 		c, err := s.upgrader.Upgrade(w, r, nil)
@@ -255,19 +257,21 @@ func (s acceptor) upgradeAndServe(addr *conn.Address) {
 		switch conn.UsePool {
 		case true:
 			connpool.Do(cb.NewFunctor00(func() {
-				if s.onCondition != nil && !s.onCondition(c.RemoteAddr()) {
+				peerRegion := conn.Region{}
+				if s.onCondition != nil && !s.onCondition(c.RemoteAddr(), &peerRegion) {
 					c.Close()
 				} else if s.onNewConnection != nil {
-					s.onNewConnection(c, s.channel, s.addr.Proto, w, r)
+					s.onNewConnection(c, s.channel, s.addr.Proto, &peerRegion, w, r)
 				} else {
 					c.Close()
 				}
 			}))
 		default:
-			if s.onCondition != nil && !s.onCondition(c.RemoteAddr()) {
+			peerRegion := conn.Region{}
+			if s.onCondition != nil && !s.onCondition(c.RemoteAddr(), &peerRegion) {
 				c.Close()
 			} else if s.onNewConnection != nil {
-				s.onNewConnection(c, s.channel, s.addr.Proto, w, r)
+				s.onNewConnection(c, s.channel, s.addr.Proto, &peerRegion, w, r)
 			} else {
 				c.Close()
 			}

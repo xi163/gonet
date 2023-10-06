@@ -9,13 +9,13 @@ import (
 	"github.com/cwloo/gonet/utils/timestamp"
 )
 
-type OnHandshake func(w http.ResponseWriter, r *http.Request) bool
+type OnVerify func(w http.ResponseWriter, r *http.Request) bool
 
-type OnCondition func(addr net.Addr) bool
+type OnCondition func(peerAddr net.Addr, peerRegion *conn.Region) bool
 
 type OnProtocol func(proto string) transmit.Channel
 
-type OnNewConnection func(conn any, channel transmit.Channel, protoName string, v ...any)
+type OnNewConnection func(conn any, channel transmit.Channel, protoName string, peerRegion *conn.Region, v ...any)
 
 type OnConnectError func(proto string, err error)
 

@@ -50,6 +50,7 @@ type Session interface {
 	Connected() bool
 	LocalAddr() string
 	RemoteAddr() string
+	RemoteRegion() Region
 	SetContext(key any, val any) (old any)
 	GetContext(key any) any
 	Write(msg any)

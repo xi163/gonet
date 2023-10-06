@@ -35,8 +35,9 @@ type TCPConnection struct {
 	id                int64
 	name              string
 	localAddr         string
-	remoteAddr        string
+	peerAddr          string
 	protoName         string
+	peerRegion        *conn.Region
 	conn              any
 	l                 sync.RWMutex
 	context           map[any]any
@@ -60,14 +61,15 @@ type TCPConnection struct {
 	destroyCallback   func(v any)
 }
 
-func NewTCPConnection(id int64, name string, c any, connType conn.Type, channel transmit.Channel, localAddr, remoteAddr, protoName string, d time.Duration) conn.Session {
+func NewTCPConnection(id int64, name string, c any, connType conn.Type, channel transmit.Channel, localAddr, peerAddr, protoName string, peerRegion *conn.Region, d time.Duration) conn.Session {
 	peer := connPool.Get().(*TCPConnection)
 	//peer := &TCPConnection{}
 	peer.id = id
 	peer.name = name
 	peer.conn = c
 	peer.localAddr = localAddr
-	peer.remoteAddr = remoteAddr
+	peer.peerAddr = peerAddr
+	peer.peerRegion = peerRegion
 	peer.protoName = protoName
 	peer.state = conn.KDisconnected
 	peer.reason = conn.KNoError
@@ -118,6 +120,12 @@ func (s *TCPConnection) assertChannel() {
 	}
 }
 
+// func (s *TCPConnection) assertRegion() {
+// 	if s.peerRegion == nil {
+// 		logs.Fatalf("error")
+// 	}
+// }
+
 // func (s *TCPConnection) checkConn() {
 // 	if s.conn == nil {
 // 		return
@@ -134,7 +142,16 @@ func (s *TCPConnection) LocalAddr() string {
 }
 
 func (s *TCPConnection) RemoteAddr() string {
-	return s.remoteAddr
+	return s.peerAddr
+}
+
+func (s *TCPConnection) RemoteRegion() conn.Region {
+	switch s.peerRegion {
+	case nil:
+		return conn.Region{}
+	default:
+		return *s.peerRegion
+	}
 }
 
 func (s *TCPConnection) ProtoName() string {

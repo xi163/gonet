@@ -120,9 +120,9 @@ func (s *Processor) SetProtocolCallback(cb cb.OnProtocol) {
 	s.acceptor.SetProtocolCallback(cb)
 }
 
-func (s *Processor) SetHandshakeCallback(cb cb.OnHandshake) {
+func (s *Processor) SetVerifyCallback(cb cb.OnVerify) {
 	s.assertAcceptor()
-	s.acceptor.SetHandshakeCallback(cb)
+	s.acceptor.SetVerifyCallback(cb)
 }
 
 func (s *Processor) SetConditionCallback(cb cb.OnCondition) {
@@ -157,11 +157,11 @@ func (s *Processor) Stop() {
 	}
 }
 
-func (s *Processor) onCondition(addr net.Addr) bool {
+func (s *Processor) onCondition(peerAddr net.Addr, peerRegion *conn.Region) bool {
 	return true
 }
 
-func (s *Processor) newConnection(c any, channel transmit.Channel, protoName string, v ...any) {
+func (s *Processor) newConnection(c any, channel transmit.Channel, protoName string, peerRegion *conn.Region, v ...any) {
 	switch protoName {
 	case "tcp":
 		if p, ok := c.(net.Conn); ok {
@@ -173,7 +173,7 @@ func (s *Processor) newConnection(c any, channel transmit.Channel, protoName str
 				strings.Join([]string{s.name, "#", localAddr, "<-", peerAddr, "#", strconv.FormatInt(connID, 10)}, ""),
 				c,
 				conn.KServer,
-				channel, localAddr, peerAddr, protoName, s.acceptor.GetIdleTimeout())
+				channel, localAddr, peerAddr, protoName, peerRegion, s.acceptor.GetIdleTimeout())
 			peer.(*tcp.TCPConnection).SetConnectedCallback(s.onConnected)
 			peer.(*tcp.TCPConnection).SetClosedCallback(s.onClosed)
 			peer.(*tcp.TCPConnection).SetMessageCallback(s.onMessage)
@@ -200,7 +200,7 @@ func (s *Processor) newConnection(c any, channel transmit.Channel, protoName str
 				strings.Join([]string{s.name, "#", localAddr, "<-", peerAddr, "#", strconv.FormatInt(connID, 10)}, ""),
 				c,
 				conn.KServer,
-				channel, localAddr, peerAddr, protoName, s.acceptor.GetIdleTimeout())
+				channel, localAddr, peerAddr, protoName, peerRegion, s.acceptor.GetIdleTimeout())
 			peer.(*tcp.TCPConnection).SetConnectedCallback(s.onConnected)
 			peer.(*tcp.TCPConnection).SetClosedCallback(s.onClosed)
 			peer.(*tcp.TCPConnection).SetMessageCallback(s.onMessage)

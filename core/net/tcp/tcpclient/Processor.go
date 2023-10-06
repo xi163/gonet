@@ -144,7 +144,7 @@ func (s *Processor) SetWriteCompleteCallback(cb cb.OnWriteComplete) {
 	s.onWriteComplete = cb
 }
 
-func (s *Processor) newConnection(c any, channel transmit.Channel, protoName string, v ...any) {
+func (s *Processor) newConnection(c any, channel transmit.Channel, protoName string, peerRegion *conn.Region, v ...any) {
 	switch protoName {
 	case "tcp":
 		if p, ok := c.(net.Conn); ok {
@@ -156,7 +156,7 @@ func (s *Processor) newConnection(c any, channel transmit.Channel, protoName str
 				strings.Join([]string{s.name, "#", localAddr, "->", peerAddr, "#", strconv.FormatInt(connID, 10)}, ""),
 				c,
 				conn.KClient,
-				channel, localAddr, peerAddr, protoName, s.connector.GetIdleTimeout())
+				channel, localAddr, peerAddr, protoName, peerRegion, s.connector.GetIdleTimeout())
 			peer.(*tcp.TCPConnection).SetConnectedCallback(s.onConnected)
 			peer.(*tcp.TCPConnection).SetClosedCallback(s.onClosed)
 			peer.(*tcp.TCPConnection).SetMessageCallback(s.onMessage)
@@ -183,7 +183,7 @@ func (s *Processor) newConnection(c any, channel transmit.Channel, protoName str
 				strings.Join([]string{s.name, "#", localAddr, "->", peerAddr, "#", strconv.FormatInt(connID, 10)}, ""),
 				c,
 				conn.KClient,
-				channel, localAddr, peerAddr, protoName, s.connector.GetIdleTimeout())
+				channel, localAddr, peerAddr, protoName, peerRegion, s.connector.GetIdleTimeout())
 			peer.(*tcp.TCPConnection).SetConnectedCallback(s.onConnected)
 			peer.(*tcp.TCPConnection).SetClosedCallback(s.onClosed)
 			peer.(*tcp.TCPConnection).SetMessageCallback(s.onMessage)

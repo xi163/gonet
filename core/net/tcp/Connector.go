@@ -127,10 +127,10 @@ func (s *connector) connectTCPTimeout(addr *conn.Address, d time.Duration) error
 	switch conn.UsePool {
 	case true:
 		connpool.Do(cb.NewFunctor00(func() {
-			s.onNewConnection(c, s.channel, s.addr.Proto)
+			s.onNewConnection(c, s.channel, s.addr.Proto, nil)
 		}))
 	default:
-		s.onNewConnection(c, s.channel, s.addr.Proto)
+		s.onNewConnection(c, s.channel, s.addr.Proto, nil)
 	}
 	return nil
 }
@@ -148,10 +148,10 @@ func (s *connector) connectWSTimeout(addr *conn.Address, d time.Duration, header
 	switch conn.UsePool {
 	case true:
 		connpool.Do(cb.NewFunctor00(func() {
-			s.onNewConnection(c, s.channel, s.addr.Proto)
+			s.onNewConnection(c, s.channel, s.addr.Proto, nil)
 		}))
 	default:
-		s.onNewConnection(c, s.channel, s.addr.Proto)
+		s.onNewConnection(c, s.channel, s.addr.Proto, nil)
 	}
 	return nil
 }

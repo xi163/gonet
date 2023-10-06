@@ -2,6 +2,7 @@ package tcpserver_test
 
 import (
 	"errors"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -36,7 +37,8 @@ func NewServer(addr string) *EchoServer {
 	s.users = user_session.NewUserToPlatforms()
 	s.server = tcpserver.NewTCPServer("EchoServer", s.addr)
 	s.server.SetProtocolCallback(s.onProtocol)
-	s.server.SetHandshakeCallback(s.onHandshake)
+	s.server.SetVerifyCallback(s.onVerify)
+	s.server.SetConditionCallback(s.onCondition)
 	s.server.SetConnectedCallback(s.onConnected)
 	s.server.SetClosedCallback(s.onClosed)
 	s.server.SetMessageCallback(s.onMessage)
@@ -62,13 +64,17 @@ func (s *EchoServer) onProtocol(proto string) transmit.Channel {
 	panic(errors.New("no proto setup"))
 }
 
-func (s *EchoServer) onHandshake(w http.ResponseWriter, r *http.Request) bool {
+func (s *EchoServer) onVerify(w http.ResponseWriter, r *http.Request) bool {
 	if atomic.LoadInt32(&s.n) >= int32(s.numMaxConns) {
 		logs.Errorf("numMaxConns=%v", s.numMaxConns)
 		return false
 	}
 	// query := r.URL.Query()
 	logs.Infof("%v", r.URL.String())
+	return true
+}
+
+func (s *EchoServer) onCondition(peerAddr net.Addr, peerRegion *conn.Region) bool {
 	return true
 }
 

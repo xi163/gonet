@@ -17,7 +17,7 @@ type TCPServer interface {
 	Range(cb func(peer conn.Session))
 	SetHoldType(holdType conn.HoldType)
 	SetProtocolCallback(cb cb.OnProtocol)
-	SetHandshakeCallback(cb cb.OnHandshake)
+	SetVerifyCallback(cb cb.OnVerify)
 	SetConditionCallback(cb cb.OnCondition)
 	SetConnectedCallback(cb cb.OnConnected)
 	SetClosedCallback(cb cb.OnClosed)
