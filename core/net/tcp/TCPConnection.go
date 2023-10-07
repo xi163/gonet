@@ -238,6 +238,7 @@ func (s *TCPConnection) connectEstablished(v ...any) {
 	if s.id == 0 {
 		logs.Fatalf("error")
 	}
+	s.closed = false
 	s.setState(conn.KConnected)
 	s.buckets.Push(s)
 	if s.onConnected != nil {
