@@ -26,8 +26,8 @@ import (
 var (
 	i32  = cc.NewI32()
 	UTC  = []byte{'T', 'P'}
-	CHR  = []string{"F", "E", "W", "I", "T", "D"}
-	LVL  = []string{"FATAL", "ERROR", "WARNING", "INFO", "TRACE", "DEBUG"}
+	CHR  = []string{"F", "E", "W", "C", "I", "D", "T"}
+	LVL  = []string{"FATAL", "ERROR", "WARN", "CRITICAL", "INFO", "DEBUG", "TRACE"}
 	MODE = []string{"M_STDOUT_ONLY", "M_FILE_ONLY", "M_STDOUT_FILE"}
 	bio  = 0
 )
@@ -882,14 +882,16 @@ func getlevel(c byte) Level {
 		return LVL_ERROR
 	case 'W':
 		return LVL_WARN
+	case 'C':
+		return LVL_CRITICAL
 	case 'I':
 		return LVL_INFO
-	case 'T':
-		return LVL_TRACE
 	case 'D':
 		return LVL_DEBUG
+	case 'T':
+		return LVL_TRACE
 	}
-	panic(errors.New("error"))
+	panic("error")
 }
 
 func (s *logger) handler(msg any, args ...any) (exit bool) {
@@ -936,7 +938,7 @@ func (s *logger) handler(msg any, args ...any) (exit bool) {
 				s.writeMsg(msgData, pos, style)
 				s.writeStack(stack)
 			}
-		case LVL_ERROR, LVL_WARN, LVL_INFO, LVL_TRACE, LVL_DEBUG:
+		case LVL_ERROR, LVL_WARN, LVL_CRITICAL, LVL_INFO, LVL_DEBUG, LVL_TRACE:
 			switch mode {
 			case M_STDOUT_ONLY:
 				s.stdoutbuf(msgData, pos, level, style, "")
@@ -1002,7 +1004,7 @@ func (s *logger) stdoutbuf(msg *Msg, pos int, level Level, style Style, stack st
 			Print(color[level][0], msg.second)
 			Print(color[level][0], stack)
 		}
-	case LVL_ERROR, LVL_WARN, LVL_INFO, LVL_TRACE, LVL_DEBUG:
+	case LVL_ERROR, LVL_WARN, LVL_CRITICAL, LVL_INFO, LVL_DEBUG, LVL_TRACE:
 		switch style {
 		case F_DETAIL, F_DETAIL_SYNC:
 			Print(color[level][0], msg.first[1:])

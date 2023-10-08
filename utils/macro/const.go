@@ -28,12 +28,13 @@ const (
 type Level uint8
 
 const (
-	LVL_FATAL Level = 0
-	LVL_ERROR Level = 1
-	LVL_WARN  Level = 2
-	LVL_INFO  Level = 3
-	LVL_TRACE Level = 4
-	LVL_DEBUG Level = 5
+	LVL_FATAL    Level = 0
+	LVL_ERROR    Level = 1
+	LVL_WARN     Level = 2
+	LVL_CRITICAL Level = 3
+	LVL_INFO     Level = 4
+	LVL_DEBUG    Level = 5
+	LVL_TRACE    Level = 6
 )
 
 type Style uint16

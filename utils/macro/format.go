@@ -17,8 +17,8 @@ import (
 var (
 	PID  = os.Getpid()
 	TAG  = []byte{'T', 'P'}
-	CHR  = []string{"F", "E", "W", "I", "T", "D"}
-	LVL  = []string{"FATAL", "ERROR", "WARNING", "INFO", "TRACE", "DEBUG"}
+	CHR  = []string{"F", "E", "W", "C", "I", "D", "T"}
+	LVL  = []string{"FATAL", "ERROR", "WARN", "CRITICAL", "INFO", "DEBUG", "TRACE"}
 	MODE = []string{"M_STDOUT_ONLY", "M_FILE_ONLY", "M_STDOUT_FILE"}
 )
 

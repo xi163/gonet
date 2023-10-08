@@ -88,16 +88,20 @@ func Warnf(format string, v ...any) {
 	inst.Write("", LVL_WARN, inst.GetStyle(), 4, format, v...)
 }
 
+func Criticalf(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, inst.GetStyle(), 4, format, v...)
+}
+
 func Infof(format string, v ...any) {
 	inst.Write("", LVL_INFO, inst.GetStyle(), 4, format, v...)
 }
 
-func Tracef(format string, v ...any) {
-	inst.Write("", LVL_TRACE, inst.GetStyle(), 4, format, v...)
-}
-
 func Debugf(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, inst.GetStyle(), 4, format, v...)
+}
+
+func Tracef(format string, v ...any) {
+	inst.Write("", LVL_TRACE, inst.GetStyle(), 4, format, v...)
 }
 
 // F_DETAIL
@@ -116,16 +120,20 @@ func Warnf_detail(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_DETAIL, 4, format, v...)
 }
 
+func Criticalf_detail(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_DETAIL, 4, format, v...)
+}
+
 func Infof_detail(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_DETAIL, 4, format, v...)
 }
 
-func Tracef_detail(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_DETAIL, 4, format, v...)
-}
-
 func Debugf_detail(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_DETAIL, 4, format, v...)
+}
+
+func Tracef_detail(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_DETAIL, 4, format, v...)
 }
 
 // F_TMSTMP
@@ -144,16 +152,20 @@ func Warnf_tmsp(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TMSTMP, 4, format, v...)
 }
 
+func Criticalf_tmsp(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_TMSTMP, 4, format, v...)
+}
+
 func Infof_tmsp(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TMSTMP, 4, format, v...)
 }
 
-func Tracef_tmsp(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_TMSTMP, 4, format, v...)
-}
-
 func Debugf_tmsp(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TMSTMP, 4, format, v...)
+}
+
+func Tracef_tmsp(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_TMSTMP, 4, format, v...)
 }
 
 // F_FN
@@ -172,16 +184,18 @@ func Warnf_fn(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_FN, 4, format, v...)
 }
 
+func Criticalf_fn(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_FN, 4, format, v...)
+}
 func Infof_fn(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_FN, 4, format, v...)
+}
+func Debugf_fn(format string, v ...any) {
+	inst.Write("", LVL_DEBUG, F_FN, 4, format, v...)
 }
 
 func Tracef_fn(format string, v ...any) {
 	inst.Write("", LVL_TRACE, F_FN, 4, format, v...)
-}
-
-func Debugf_fn(format string, v ...any) {
-	inst.Write("", LVL_DEBUG, F_FN, 4, format, v...)
 }
 
 // F_TMSTMP_FN
@@ -200,16 +214,20 @@ func Warnf_tmsp_fn(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TMSTMP_FN, 4, format, v...)
 }
 
+func Criticalf_tmsp_fn(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_TMSTMP_FN, 4, format, v...)
+}
+
 func Infof_tmsp_fn(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TMSTMP_FN, 4, format, v...)
 }
 
-func Tracef_tmsp_fn(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_TMSTMP_FN, 4, format, v...)
-}
-
 func Debugf_tmsp_fn(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TMSTMP_FN, 4, format, v...)
+}
+
+func Tracef_tmsp_fn(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_TMSTMP_FN, 4, format, v...)
 }
 
 // F_FL
@@ -228,16 +246,20 @@ func Warnf_fl(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_FL, 4, format, v...)
 }
 
+func Criticalf_fl(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_FL, 4, format, v...)
+}
+
 func Infof_fl(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_FL, 4, format, v...)
 }
 
-func Tracef_fl(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_FL, 4, format, v...)
-}
-
 func Debugf_fl(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_FL, 4, format, v...)
+}
+
+func Tracef_fl(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_FL, 4, format, v...)
 }
 
 // F_TMSTMP_FL
@@ -256,16 +278,20 @@ func Warnf_tmsp_fl(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TMSTMP_FL, 4, format, v...)
 }
 
+func Criticalf_tmsp_fl(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_TMSTMP_FL, 4, format, v...)
+}
+
 func Infof_tmsp_fl(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TMSTMP_FL, 4, format, v...)
 }
 
-func Tracef_tmsp_fl(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_TMSTMP_FL, 4, format, v...)
-}
-
 func Debugf_tmsp_fl(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TMSTMP_FL, 4, format, v...)
+}
+
+func Tracef_tmsp_fl(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_TMSTMP_FL, 4, format, v...)
 }
 
 // F_FL_FN
@@ -284,16 +310,20 @@ func Warnf_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_FL_FN, 4, format, v...)
 }
 
+func Criticalf_fl_fn(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_FL_FN, 4, format, v...)
+}
+
 func Infof_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_FL_FN, 4, format, v...)
 }
 
-func Tracef_fl_fn(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_FL_FN, 4, format, v...)
-}
-
 func Debugf_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_FL_FN, 4, format, v...)
+}
+
+func Tracef_fl_fn(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_FL_FN, 4, format, v...)
 }
 
 // F_TMSTMP_FL_FN
@@ -312,16 +342,20 @@ func Warnf_tmsp_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TMSTMP_FL_FN, 4, format, v...)
 }
 
+func Criticalf_tmsp_fl_fn(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_TMSTMP_FL_FN, 4, format, v...)
+}
+
 func Infof_tmsp_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TMSTMP_FL_FN, 4, format, v...)
 }
 
-func Tracef_tmsp_fl_fn(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_TMSTMP_FL_FN, 4, format, v...)
-}
-
 func Debugf_tmsp_fl_fn(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TMSTMP_FL_FN, 4, format, v...)
+}
+
+func Tracef_tmsp_fl_fn(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_TMSTMP_FL_FN, 4, format, v...)
 }
 
 // F_TEXT
@@ -340,16 +374,20 @@ func Warnf_text(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_TEXT, 4, format, v...)
 }
 
+func Criticalf_text(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_TEXT, 4, format, v...)
+}
+
 func Infof_text(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_TEXT, 4, format, v...)
 }
 
-func Tracef_text(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_TEXT, 4, format, v...)
-}
-
 func Debugf_text(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_TEXT, 4, format, v...)
+}
+
+func Tracef_text(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_TEXT, 4, format, v...)
 }
 
 // F_PURE
@@ -368,14 +406,18 @@ func Warnf_pure(format string, v ...any) {
 	inst.Write("", LVL_WARN, F_PURE, 4, format, v...)
 }
 
+func Criticalf_pure(format string, v ...any) {
+	inst.Write("", LVL_CRITICAL, F_PURE, 4, format, v...)
+}
+
 func Infof_pure(format string, v ...any) {
 	inst.Write("", LVL_INFO, F_PURE, 4, format, v...)
 }
 
-func Tracef_pure(format string, v ...any) {
-	inst.Write("", LVL_TRACE, F_PURE, 4, format, v...)
-}
-
 func Debugf_pure(format string, v ...any) {
 	inst.Write("", LVL_DEBUG, F_PURE, 4, format, v...)
+}
+
+func Tracef_pure(format string, v ...any) {
+	inst.Write("", LVL_TRACE, F_PURE, 4, format, v...)
 }
