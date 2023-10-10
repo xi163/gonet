@@ -53,6 +53,8 @@ type Session interface {
 	RemoteRegion() Region
 	SetContext(key any, val any) (old any)
 	GetContext(key any) any
+	SetContextLocker(key any, val any) (old any)
+	GetContextLocker(key any) any
 	Write(msg any)
 	WriteText(msg any)
 	Close()

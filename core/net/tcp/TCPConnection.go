@@ -163,7 +163,6 @@ func (s *TCPConnection) Type() conn.Type {
 }
 
 func (s *TCPConnection) SetContext(key any, val any) (old any) {
-	s.l.Lock()
 	switch val {
 	case nil:
 		v, ok := s.context[key]
@@ -180,11 +179,22 @@ func (s *TCPConnection) SetContext(key any, val any) (old any) {
 		}
 		s.context[key] = val
 	}
-	s.l.Unlock()
 	return
 }
 
 func (s *TCPConnection) GetContext(key any) (val any) {
+	val = s.context[key]
+	return
+}
+
+func (s *TCPConnection) SetContextLocker(key any, val any) (old any) {
+	s.l.Lock()
+	old = s.SetContext(key, val)
+	s.l.Unlock()
+	return
+}
+
+func (s *TCPConnection) GetContextLocker(key any) (val any) {
 	s.l.RLock()
 	val = s.context[key]
 	s.l.RUnlock()
