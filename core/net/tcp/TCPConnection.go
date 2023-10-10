@@ -49,7 +49,7 @@ type TCPConnection struct {
 	closing           cc.AtomFlag
 	flag              cc.AtomFlag
 	state             conn.State
-	reason            conn.ReasonTD
+	reason            conn.ReasonID
 	buckets           keepalive.Buckets
 	onConnected       cb.OnConnected
 	onClosed          cb.OnClosed
@@ -100,7 +100,7 @@ func (s *TCPConnection) setState(state conn.State) {
 	s.state = state
 }
 
-func (s *TCPConnection) setReason(reason conn.ReasonTD) {
+func (s *TCPConnection) setReason(reason conn.ReasonID) {
 	s.reason = reason
 }
 

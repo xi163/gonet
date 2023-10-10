@@ -2,18 +2,18 @@ package conn
 
 import "time"
 
-type ReasonTD uint8
+type ReasonID uint8
 
 const (
-	KNoError           ReasonTD = ReasonTD(0)
-	KPeerClosed        ReasonTD = ReasonTD(1) //对端关闭连接
-	KSelfClosed        ReasonTD = ReasonTD(2) //本端关闭连接
-	KSelfClosedDelay   ReasonTD = ReasonTD(3) //本端延时关闭
-	KSelfClosedExpired ReasonTD = ReasonTD(4) //过期关闭对端
+	KNoError           ReasonID = ReasonID(0)
+	KPeerClosed        ReasonID = ReasonID(1) //对端关闭连接
+	KSelfClosed        ReasonID = ReasonID(2) //本端关闭连接
+	KSelfClosedDelay   ReasonID = ReasonID(3) //本端延时关闭
+	KSelfClosedExpired ReasonID = ReasonID(4) //过期关闭对端
 )
 
 type Reason struct {
-	Id  ReasonTD
+	Id  ReasonID
 	Msg string
 }
 
